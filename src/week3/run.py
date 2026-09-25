@@ -1,5 +1,3 @@
-"""Week 3 CLI and sequential batch orchestration."""
-
 import argparse
 import json
 import time

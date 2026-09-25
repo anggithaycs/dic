@@ -1,5 +1,3 @@
-"""Generate one physical release file per dataset, plus a measured manifest."""
-
 import json
 import math
 import shutil

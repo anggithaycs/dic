@@ -1,5 +1,3 @@
-"""Small, explicit extension of the Week 1 ingestion contracts."""
-
 import json
 import time
 from copy import deepcopy
@@ -19,9 +17,12 @@ def settings():
 
 def ingestor(spark, config, name, source=None):
     spec = deepcopy(config["datasets"][name])
+
     if source is not None:
         spec["source_path"] = str(source)
+
     spec["validation"].update(settings()["validation"].get(name, {}))
+
     return INGESTOR_REGISTRY[name](spark, spec, "3.0", config["paths"]["metadata_path"])
 
 
@@ -36,6 +37,7 @@ def append_record(spark, path, record):
         )
         .withColumn("completed_at", F.current_timestamp())
     )
+
     frame.coalesce(1).write.format("delta").mode("append").option(
         "mergeSchema", "true"
     ).save(str(path))
@@ -57,12 +59,14 @@ def merge(spark, path, frame, keys):
 def classify(loader, raw, config):
     """Use existing SQL rules and add foreign-key and explicit-correction checks."""
     frame = loader.prepare(raw)
+
     if loader.dataset_name == "TaxiTrips":
         zones = (
             loader.spark.read.format("delta")
             .load(config["datasets"]["taxi_zones"]["silver_path"])
             .select("location_id")
         )
+
         for endpoint in ("pickup", "dropoff"):
             key = f"_{endpoint}_reference"
             frame = frame.join(
@@ -73,6 +77,7 @@ def classify(loader, raw, config):
             loader.dataset_spec["validation"][f"missing_reference:{endpoint}"] = (
                 f"{key} IS NOT NULL"
             )
+
         if "original_trip_id" in frame.columns:
             existing = loader.spark.read.format("delta").load(loader.delta_output_path)
             frame = frame.join(
@@ -83,6 +88,7 @@ def classify(loader, raw, config):
             loader.dataset_spec["validation"]["unknown_correction_id"] = (
                 "original_trip_id IS NULL OR _original_id IS NOT NULL"
             )
+
     return loader.classify_records(frame)
 
 
@@ -119,8 +125,10 @@ def process(spark, config, name, source, root, run_id, validate=True, monitor=Tr
         error="",
         source=str(source),
     )
+
     loader = ingestor(spark, config, name, source)
     raw = classified = changed = None
+
     try:
         # Read without the Week 1 schema gate so unsupported batches can be isolated.
         reader = spark.read.option("header", True).option("inferSchema", False)
@@ -133,17 +141,23 @@ def process(spark, config, name, source, root, run_id, validate=True, monitor=Tr
         )
         additions = settings()["additions"].get(name, {})
         allowed = set(baseline.names) | set(additions)
+
         if name == "taxi_trips":
             allowed.add("original_trip_id")
+
         problems = []
+
         if set(baseline.names) - set(raw.columns):
             problems.append("missing_source_columns")
+
         if set(raw.columns) - allowed:
             problems.append("unsupported_columns")
+
         if loader.file_format == "parquet":
             types = {f.name: f.dataType for f in baseline}
             if any(f.name in types and f.dataType != types[f.name] for f in raw.schema):
                 problems.append("unsupported_type_change")
+
         if problems:
             metric["rejected_records"] = metric["processed_records"]
             metric["validation_failures"] = metric["processed_records"]
@@ -157,17 +171,20 @@ def process(spark, config, name, source, root, run_id, validate=True, monitor=Tr
                 run_id,
             )
             return metric, None
+
         for col, rule in additions.items():
             if col in raw.columns:
                 loader.dataset_spec["casts"][col] = rule["type"]
                 loader.dataset_spec["validation"][f"valid_{col}"] = rule["rule"]
                 loader.dataset_spec["selected_columns"].append(col)
         validation_start = time.perf_counter()
+
         if validate:
             classified = classify(loader, raw, config).cache()
         else:
             loader.dataset_spec["validation"] = {}
             classified = loader.classify_records(loader.prepare(raw)).cache()
+
         valid, rejected = loader.split_records(classified)
         valid = valid.drop(
             "_pickup_reference",
@@ -175,37 +192,47 @@ def process(spark, config, name, source, root, run_id, validate=True, monitor=Tr
             "_original_id",
             "original_trip_id",
         )
+
         scoped = classified.count()
         metric["rejected_records"] = rejected.count()
         metric["validation_failures"] = rejected.filter(
             F.col("_rejection_reason") != "duplicate_key"
         ).count()
+
         metric["duplicate_records"] = (
             metric["rejected_records"] - metric["validation_failures"]
         )
+
         metric["out_of_scope_records"] = metric["processed_records"] - scoped
         metric["validation_seconds"] = time.perf_counter() - validation_start
+
         if metric["rejected_records"]:
             quarantine(spark, root, name, rejected, run_id)
+
         target = spark.read.format("delta").load(loader.delta_output_path)
         # An older release omitting an already-added field must preserve its value.
         keys = loader.dataset_spec["key"]
         missing = [c for c in target.columns if c not in valid.columns]
+
         if missing:
             valid = valid.join(target.select(*keys, *missing), keys, "left")
         added = [c for c in valid.columns if c not in target.columns]
+
         for col in added:
             target = target.withColumn(
                 col, F.lit(None).cast(valid.schema[col].dataType)
             )
+
         joined = valid.alias("s").join(target.alias("t"), keys, "left")
         is_new = F.col(f"t.{keys[0]}").isNull()
         different = F.lit(False)
+
         for col in valid.columns:
             if col not in keys:
                 different = different | ~F.col(f"s.`{col}`").eqNullSafe(
                     F.col(f"t.`{col}`")
                 )
+
         changed = joined.filter(is_new | different).select("s.*").cache()
         metric["inserted_records"] = joined.filter(is_new).count()
         changed_count = changed.count()
@@ -215,20 +242,24 @@ def process(spark, config, name, source, root, run_id, validate=True, monitor=Tr
         impact_path = root / "impacts" / run_id / name
         changed.write.format("delta").mode("overwrite").save(str(impact_path))
         staged = spark.read.format("delta").load(str(impact_path))
+
         if changed_count or added:
             merge(spark, loader.delta_output_path, staged, keys)
         metric["status"] = "success"
         metric["schema_version"] = (
             "3.1" if set(additions) & set(valid.columns) else "3.0"
         )
+
         return metric, staged
     except Exception as error:
         metric["error"] = str(error)[:2000]
         raise
     finally:
         metric["duration_seconds"] = time.perf_counter() - started
+        
         for frame in (raw, classified, changed):
             if frame is not None:
                 frame.unpersist()
+        
         if monitor:
             append_record(spark, root / "executions", metric)

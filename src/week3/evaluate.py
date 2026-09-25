@@ -1,5 +1,3 @@
-"""Controlled ablations on independent local Delta copies."""
-
 import json
 import shutil
 from copy import deepcopy
@@ -16,14 +14,17 @@ def clone(config, gold, destination):
     result = deepcopy(config)
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
+
     for name, spec in result["datasets"].items():
         path = destination / name
         shutil.copytree(spec["silver_path"], path)
         spec["silver_path"] = str(path)
+
     path = destination / "integrated"
     shutil.copytree(config["integration"]["output_path"], path)
     result["integration"]["output_path"] = str(path)
     shutil.copytree(gold, destination / "gold")
+
     return result
 
 
@@ -66,6 +67,7 @@ def evaluate(spark, config, releases, gold, destination, repeats=3):
                 physical_bytes_after=disk_bytes(folder),
             )
             result["storage_overhead_bytes"] = result["physical_bytes_after"] - before
+
             if (
                 any(m["validation_failures"] for m in result["datasets"].values())
                 or result["status"] != "success"
@@ -73,8 +75,10 @@ def evaluate(spark, config, releases, gold, destination, repeats=3):
                 raise ValueError(
                     "Use valid releases for ablations; test invalid rows separately"
                 )
+
             if reference is None:
                 reference = folder
+
             for name in PRODUCTS:
                 expected = spark.read.format("delta").load(
                     str(reference / "gold" / name)
@@ -96,6 +100,7 @@ def evaluate(spark, config, releases, gold, destination, repeats=3):
                     "air_quality_impact_summary": ["hour_utc"],
                 }[name]
                 check_equal(expected.collect(), actual.collect(), keys)
+
             result["equivalent_products"] = True
             measurements.append(result)
             (destination / "measurements.json").write_text(

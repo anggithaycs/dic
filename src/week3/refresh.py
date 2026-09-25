@@ -1,5 +1,3 @@
-"""Refresh affected trips, then replace complete affected aggregate groups."""
-
 import time
 from pathlib import Path
 
