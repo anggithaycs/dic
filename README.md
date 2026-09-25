@@ -1,14 +1,18 @@
-# Urban Data Platform: Weeks 1 and 2
+# Urban Data Platform: Weeks 1, 2 and 3
 
 This project uses Apache Spark and Delta Lake to analyse New York taxi trips alongside weather, air quality and taxi-zone data.
 
 - **Week 1:** ingest and validate four datasets, integrate trips with environmental and location information, and benchmark three storage layouts.
 - **Week 2:** answer six analytical questions, build four reusable Gold summaries, and test caching, partition pruning, broadcast joins and Adaptive Query Execution (AQE) on all six queries.
 
+- **Week 3:** generate incremental releases, merge updates, evolve schemas, refresh affected analytics, quarantine bad records and measure operating costs.
+
 ## Find the right guide
 
 | What you need | Where to go |
 |---|---|
+| Week 3 commands and operating policy | [Week 3 guide](src/week3/README.md) |
+| Week 3 plan and reports | [Week 3 reports](reports/week3/README.md) |
 | Project setup and Week 1 execution | Continue below. |
 | Week 1 reports and evidence | [Week 1 reports README](reports/week1/README.md) |
 | Week 2 design and benchmark reports | [Week 2 reports README](reports/week2/README.md) |
@@ -158,6 +162,21 @@ python scripts/package_week1.py --metrics storage/metrics/<successful-full-run>.
 
 Set `POPPLER_BIN` if Poppler is not on `PATH`. The builder requires an explicitly selected successful raw-input metrics artifact. It regenerates the benchmark source and copies the JSON to `reports/week1/evidence/`. Visually inspect any PDFs rebuilt after source edits. The Spark runner itself regenerates only benchmark Markdown. Older benchmark and validation material is historical; consult the canonical benchmark report to identify the measurements currently presented.
 
+## Run Week 3
+
+After Week 1 and Week 2 Gold are available:
+
+```powershell
+.venv/Scripts/python.exe -m src.week3.run generate
+.venv/Scripts/python.exe -m src.week3.run evaluate --repeats 3
+.venv/Scripts/python.exe -m src.week3.run update
+.venv/Scripts/python.exe -m src.week3.run monitor
+```
+
+Evaluate before updating the baseline so each independent copy processes new records. Full-data evaluation creates several Delta copies and needs additional disk space. For a small, self-contained evaluation, use `.venv/Scripts/python.exe tests/test_week3.py --evaluate`.
+
+The [Week 3 guide](src/week3/README.md) explains schema evolution, corrections, selective refresh, quarantine, recovery, monitoring and measurements. The [implementation plan and reports](reports/week3/README.md) map these features to all five assignment tasks.
+
 ## Next tasks
 
-Week 3 needs a policy for identifying corrected trips, because changing fare or distance changes the taxi hash. It also needs explicit schema evolution for `humidity` and `aqi`, merge-based publication, and refreshes of affected analytical products. Week 4 can reuse preparation and integration while adding features and temporal splits for each prediction target. These extensions can be introduced when needed without adding speculative orchestration or machine-learning frameworks to Week 1.
+Week 4 can reuse preparation and integration while adding features and temporal splits for each prediction target.

@@ -1,0 +1,15 @@
+# Add nullable columns here only after agreeing their meaning with the producer.
+additions:
+  weather:
+    humidity: {type: double, rule: "humidity IS NULL OR humidity BETWEEN 20 AND 100"}
+  air_quality:
+    aqi: {type: double, rule: "aqi IS NULL OR aqi BETWEEN 0 AND 500"}
+validation:
+  taxi_trips:
+    valid_period: "pickup_year BETWEEN 2024 AND 2100"
+  weather:
+    valid_calendar: "year BETWEEN 2024 AND 2100 AND month BETWEEN 1 AND 12 AND day BETWEEN 1 AND 31 AND hour BETWEEN 0 AND 23"
+  air_quality:
+    valid_timestamp: "observation_datetime IS NOT NULL AND year(observation_datetime) BETWEEN 2024 AND 2100"
+  taxi_zones:
+    complete_zone: "zone IS NOT NULL AND length(trim(zone)) > 0 AND service_zone IS NOT NULL AND length(trim(service_zone)) > 0"

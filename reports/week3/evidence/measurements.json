@@ -1,0 +1,974 @@
+[
+  {
+    "run_id": "eb357275bbee48e58b341f3afc1c5043",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "eb357275bbee48e58b341f3afc1c5043",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.4636347000487149,
+        "duration_seconds": 5.327127700089477,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "eb357275bbee48e58b341f3afc1c5043",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6095572999911383,
+        "duration_seconds": 4.637897999957204,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "eb357275bbee48e58b341f3afc1c5043",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.7306014999048784,
+        "duration_seconds": 5.884830499999225,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "eb357275bbee48e58b341f3afc1c5043",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 2.030835199984722,
+        "duration_seconds": 8.730528500047512,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 31.204917699913494,
+    "affected_trips": 215,
+    "integration_seconds": 10.643875800073147,
+    "analytical_refresh_seconds": 23.800435499986634,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 5.275626000016928
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 5.422273500007577
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 3.6289242999628186
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 3.201690600020811
+      }
+    },
+    "total_seconds": 65.64928279991727,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 0,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457249,
+    "storage_overhead_bytes": 313705,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "96c12d01f7424b7ca6264172c266a2d7",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "96c12d01f7424b7ca6264172c266a2d7",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.4109946000389755,
+        "duration_seconds": 5.6183623999822885,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "96c12d01f7424b7ca6264172c266a2d7",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9965560999698937,
+        "duration_seconds": 6.819252399960533,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "96c12d01f7424b7ca6264172c266a2d7",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2784007000736892,
+        "duration_seconds": 5.739961600047536,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "96c12d01f7424b7ca6264172c266a2d7",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.578328000032343,
+        "duration_seconds": 6.4915470000123605,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 30.76609649998136,
+    "affected_trips": 215,
+    "integration_seconds": 9.406038800021634,
+    "analytical_refresh_seconds": 27.319135900004767,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 5.1219855000963435
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 4.83134700008668
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.422221299959347
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 4.798516500042751
+      }
+    },
+    "total_seconds": 67.49130720004905,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 0,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457713,
+    "storage_overhead_bytes": 314169,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "5db7c6e520794d858b60ff371e20373b",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "5db7c6e520794d858b60ff371e20373b",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.40209959994535893,
+        "duration_seconds": 7.043054699897766,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "5db7c6e520794d858b60ff371e20373b",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.8670110000530258,
+        "duration_seconds": 6.562235599965788,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "5db7c6e520794d858b60ff371e20373b",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2726361999521032,
+        "duration_seconds": 7.565352299949154,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "5db7c6e520794d858b60ff371e20373b",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.8352517000166699,
+        "duration_seconds": 7.050631899968721,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 29.176528599928133,
+    "affected_trips": 215,
+    "integration_seconds": 9.458547300077043,
+    "analytical_refresh_seconds": 19.391181899933144,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 4.889106500078924
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 4.8891028999350965
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 4.564188400050625
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 4.40955180011224
+      }
+    },
+    "total_seconds": 58.02631250000559,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 0,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 358353,
+    "storage_overhead_bytes": 214809,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "9d0ae1311b4349578d22aa8692fbfbcc",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "9d0ae1311b4349578d22aa8692fbfbcc",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.3576258000684902,
+        "duration_seconds": 7.224024700000882,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "9d0ae1311b4349578d22aa8692fbfbcc",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6004679999314249,
+        "duration_seconds": 5.258843299932778,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "9d0ae1311b4349578d22aa8692fbfbcc",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.8663844999391586,
+        "duration_seconds": 6.259522499982268,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "9d0ae1311b4349578d22aa8692fbfbcc",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9045651000924408,
+        "duration_seconds": 6.535665399977006,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 31.160109599935822,
+    "affected_trips": 215,
+    "integration_seconds": 7.463524100021459,
+    "analytical_refresh_seconds": 32.115874900016934,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 4.722829899983481
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 4.843074299977161
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 7.049545900081284
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 7.407035400043242
+      }
+    },
+    "total_seconds": 70.73956010001712,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 1,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457713,
+    "storage_overhead_bytes": 314169,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "c5c2801f55b04039ab8f8ca6773e1df7",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "c5c2801f55b04039ab8f8ca6773e1df7",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.00089480006136,
+        "duration_seconds": 9.712180800037459,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "c5c2801f55b04039ab8f8ca6773e1df7",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9391129000578076,
+        "duration_seconds": 7.566088099963963,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "c5c2801f55b04039ab8f8ca6773e1df7",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2290763999335468,
+        "duration_seconds": 9.32224310003221,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "c5c2801f55b04039ab8f8ca6773e1df7",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 2.2571707000024617,
+        "duration_seconds": 10.996759700006805,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 38.83720390009694,
+    "affected_trips": 215,
+    "integration_seconds": 9.924516699975356,
+    "analytical_refresh_seconds": 32.81033709994517,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 9.79743779997807
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 8.41689380002208
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 8.55139599996619
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 4.829055599984713
+      }
+    },
+    "total_seconds": 81.57211270008702,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 1,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 358348,
+    "storage_overhead_bytes": 214804,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "6251493943f9463fa62e2a1a99aa5237",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "6251493943f9463fa62e2a1a99aa5237",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.621144299977459,
+        "duration_seconds": 7.299242499982938,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "6251493943f9463fa62e2a1a99aa5237",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9984652999555692,
+        "duration_seconds": 7.800125599955209,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "6251493943f9463fa62e2a1a99aa5237",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2404000998940319,
+        "duration_seconds": 7.021079399972223,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "6251493943f9463fa62e2a1a99aa5237",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.5516004000091925,
+        "duration_seconds": 8.3945182999596,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 39.19450590002816,
+    "affected_trips": 215,
+    "integration_seconds": 10.286542500020005,
+    "analytical_refresh_seconds": 32.12157529999968,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 6.73783680004999
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 5.652129900059663
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.7455149999586865
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.100958400056697
+      }
+    },
+    "total_seconds": 81.60267159994692,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 1,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457241,
+    "storage_overhead_bytes": 313697,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "07e8f172413d4c36b2bd3f5fe1c2d616",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "07e8f172413d4c36b2bd3f5fe1c2d616",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.5420679999515414,
+        "duration_seconds": 7.408509899978526,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "07e8f172413d4c36b2bd3f5fe1c2d616",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9876320000039414,
+        "duration_seconds": 8.95096679998096,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "07e8f172413d4c36b2bd3f5fe1c2d616",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.4498426999198273,
+        "duration_seconds": 8.346560700098053,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "07e8f172413d4c36b2bd3f5fe1c2d616",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.689844899927266,
+        "duration_seconds": 8.453120100079104,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 33.99487749999389,
+    "affected_trips": 215,
+    "integration_seconds": 9.727322199963965,
+    "analytical_refresh_seconds": 24.192982400069013,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 5.986308600055054
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 6.238890799926594
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.792095000040717
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.322112399968319
+      }
+    },
+    "total_seconds": 67.91522760002408,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 2,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 358353,
+    "storage_overhead_bytes": 214809,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "0757a19a3eaf41ed959112408c7b0fa7",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "0757a19a3eaf41ed959112408c7b0fa7",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.7338511999696493,
+        "duration_seconds": 7.840889499988407,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "0757a19a3eaf41ed959112408c7b0fa7",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.300157600082457,
+        "duration_seconds": 8.372471099952236,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "0757a19a3eaf41ed959112408c7b0fa7",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.0272260999772698,
+        "duration_seconds": 7.616612000041641,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "0757a19a3eaf41ed959112408c7b0fa7",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.4347305999835953,
+        "duration_seconds": 10.387848200043663,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 42.85167070000898,
+    "affected_trips": 215,
+    "integration_seconds": 9.789156200014986,
+    "analytical_refresh_seconds": 34.39245889999438,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 6.944856200017966
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 6.049383699893951
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 6.425782699952833
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 5.961405599955469
+      }
+    },
+    "total_seconds": 87.03332820010837,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 2,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457260,
+    "storage_overhead_bytes": 313716,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "a95cd41c4bbb4f47a6a3a9b415118662",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "a95cd41c4bbb4f47a6a3a9b415118662",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.5722575000254437,
+        "duration_seconds": 8.09519799996633,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "a95cd41c4bbb4f47a6a3a9b415118662",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9737082000356168,
+        "duration_seconds": 7.655415200046264,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "a95cd41c4bbb4f47a6a3a9b415118662",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 4,
+        "inserted_records": 4,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.4339346000924706,
+        "duration_seconds": 8.347881400026381,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "a95cd41c4bbb4f47a6a3a9b415118662",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 18,
+        "inserted_records": 15,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 3,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.0956293999915943,
+        "duration_seconds": 9.439324900042266,
+        "error": "",
+        "source": "C:\\Users\\horva\\Desktop\\KTH\\data_intensive_computing\\ai_solution\\.test-output\\week3-2ee81fc8818241c991e7b3ee635e3f1c\\release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 43.45180869998876,
+    "affected_trips": 215,
+    "integration_seconds": 13.30090170004405,
+    "analytical_refresh_seconds": 56.37205999996513,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-03-31',DATE '2024-04-01')",
+        "seconds": 8.800981399952434
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-03-01',DATE '2024-04-01')",
+        "seconds": 11.797859899932519
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 10.41266050003469
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 10.135156399919651
+      }
+    },
+    "total_seconds": 113.12485180003569,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 2,
+    "physical_bytes_before": 143544,
+    "physical_bytes_after": 457719,
+    "storage_overhead_bytes": 314175,
+    "equivalent_products": true
+  }
+]

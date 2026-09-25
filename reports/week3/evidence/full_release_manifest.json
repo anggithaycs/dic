@@ -1,0 +1,34 @@
+{
+  "taxi_zones": {
+    "file": "taxi_zones.csv",
+    "new_records": 0,
+    "duplicate_records": 0,
+    "modified_records": 1,
+    "schema_changes": []
+  },
+  "taxi_trips": {
+    "file": "taxi_trips.parquet",
+    "new_records": 716609,
+    "duplicate_records": 143322,
+    "modified_records": 0,
+    "schema_changes": []
+  },
+  "weather": {
+    "file": "weather.csv",
+    "new_records": 48,
+    "duplicate_records": 0,
+    "modified_records": 0,
+    "schema_changes": [
+      "humidity: double (20\u2013100 percent)"
+    ]
+  },
+  "air_quality": {
+    "file": "air_quality.csv",
+    "new_records": 288,
+    "duplicate_records": 0,
+    "modified_records": 0,
+    "schema_changes": [
+      "aqi: double (synthetic index, not computed from PM2.5)"
+    ]
+  }
+}
