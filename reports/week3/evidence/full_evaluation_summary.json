@@ -1,0 +1,11 @@
+{
+  "runs": 9,
+  "median_total_seconds": {
+    "full": 673.685052899993,
+    "without_validation": 748.986368300044,
+    "without_monitoring": 593.4550386000192
+  },
+  "validation_overhead_seconds": -75.30131540005095,
+  "monitoring_overhead_seconds": 80.23001429997385,
+  "evidence": "storage\\metrics\\week3\\b4ea2164845846b4b4fc9825c2e218cc\\measurements.json"
+}

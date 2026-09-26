@@ -1,44 +1,55 @@
 # Week 3 evaluation
-## Full-data update and replay results
 
-The supplied-source release was successfully applied to the main pipeline. Run 8b846d942ea84336a7e8a89a2c70116d processed 859,931 taxi rows: 716,609 inserted and 143,322 duplicates. It also inserted 48 weather and 288 air observations and updated one zone. All four datasets reported zero rejected records and zero validation failures.
+## Workload and method
 
-The update stage took 125.85 seconds, integration 503.34 seconds and analytical refresh 45.70 seconds. Total measured time was 674.90 seconds (11 minutes 15 seconds), excluding the final pipeline audit write. Integration covered 739,033 affected trips and dominated elapsed time. All four analytical products were refreshed: affected date/month groups for mobility and zone statistics, and full weather/air summaries.
+The evaluation used the full-data Silver and Gold tables rebuilt from Weeks 1 and 2, before applying the Week 3 release. Each experiment started from its own copy of this baseline. This means every run processed new records and corrections, rather than replaying an update that was already present.
 
-There is one recorded full-data update, so its timings are observations rather than repeated-run medians. No before/after storage measurement is recorded for that initial update. Evidence is preserved in evidence/full_update.json.
+Three configurations were tested: normal processing, processing without the additional row-validation rules, and processing without operational monitoring. Each configuration ran three times, giving nine samples. The execution order rotated between repetitions. Spark's cache was cleared between cases, but the same Spark session and filesystem were reused, so this was not a cold-start benchmark.
 
-## Repeated full-data replay benchmark
+The release contained 859,931 taxi rows, 48 weather observations, 288 air observations and one zone correction. Every run inserted 716,609 taxi trips, recognised 143,322 existing taxi duplicates, inserted the weather and air rows, and updated the zone. Humidity and AQI were introduced as nullable columns. All nine runs completed successfully.
 
-The nine evaluation samples used independent copies of an already-updated baseline, with three repetitions per case. Every run processed 859,931 taxi rows as duplicates, made no inserts or updates across all datasets and reported zero affected trips. These measurements therefore describe replay detection and audit overhead; they do not measure first-application merge or analytical recomputation costs. Every sample passed the product-equivalence check.
+The figures below are calculated from the saved measurements in `storage/metrics/week3/b4ea2164845846b4b4fc9825c2e218cc/`. Copies are included in [evidence/full_evaluation_measurements.json](evidence/full_evaluation_measurements.json) and [evidence/full_evaluation_summary.json](evidence/full_evaluation_summary.json). The measurements do not include a runtime-configuration snapshot, so they cannot establish performance under a precisely reproducible hardware and Spark configuration.
 
-| Replay case | Update s | Gold refresh s | Total s | Growth KiB |
+## Incremental update and analytical refresh performance
+
+| Configuration | Update (s) | Integration (s) | Gold refresh (s) | Total (s) |
 |---|---:|---:|---:|---:|
-| Full processing | 163.37 | 1.93 | 179.10 | 82.6 |
-| No extra validation | 157.62 | 3.47 | 176.08 | 82.6 |
-| No monitoring | 160.78 | 3.69 | 178.75 | 24.4 |
+| Normal processing | 123.27 | 491.88 | 80.02 | 673.69 |
+| Without extra validation | 112.52 | 575.31 | 56.02 | 748.99 |
+| Without monitoring | 120.30 | 426.97 | 45.22 | 593.46 |
 
-Median total-time differences were 3.02 seconds for extra validation and 0.35 seconds for monitoring. These small differences are noisy comparisons, not isolated feature costs. Growth includes retained Delta files, audit output and run JSON; it is not initial-update storage growth. Raw samples are in evidence/full_replay_measurements.json. Runtime settings were not recorded in these JSON results, so the fixture settings below must not be assumed for this run.
+Each value is the median of three runs. Phase medians are calculated separately, so they do not necessarily add up to the median total. The normal run took about 11 minutes 14 seconds, with individual totals ranging from 646.22 to 723.98 seconds. Update timing includes loading, preparation, validation, change detection, merges and dataset audit writes. Total timing excludes baseline copying, source generation, Spark startup, post-run product comparisons and the final pipeline-status write.
 
-<!-- pagebreak -->
+Integration was the largest cost, accounting for 64.5% to 76.1% of normal-run time. Each run refreshed 739,033 affected trips. This exceeds the number of inserted trips because reference-data corrections can also affect existing trips. Finding affected records and merging them into the integrated table still requires access to large existing tables, even though only a subset is enriched. The phase measurements identify integration as the bottleneck, but do not separate scan, join and file-rewrite costs.
 
-## Full-data interpretation and limitations
+All four Gold products were refreshed in every run. Daily mobility replaced affected date groups and taxi-zone statistics replaced affected month groups. Weather and air summaries were fully recomputed. Their median individual refresh times in normal processing were 10.33, 8.85, 10.12 and 19.60 seconds respectively. The overall Gold stage also includes shared preparation and audit work; its median cannot be reconstructed by adding the separate product medians.
 
-Integration accounted for 74.6% of the initial update time. The implementation limits enrichment to affected trips, but identifying those trips and merging by trip ID still accesses the existing large tables. A zone correction can affect historical trips. The current merge has no explicit partition restriction, so a small release does not imply proportionally small read or rewrite work. These are code-based explanations; the saved phase timings do not isolate individual scans, joins or file rewrites.
+## Validation and monitoring results
 
-The full-data run demonstrates successful processing of this release, including duplicate detection, schema additions and analytical refresh. The nine replays demonstrate repeatability after the release is present. Their product-equivalence checks compare replay cases with each other; they do not establish equivalence of the initial full-data refresh to an independent full recomputation. Full-data failure injection and recovery were not measured.
+No dataset reported rejected rows or validation failures in any run. In the configurations where validation was enabled, this shows that the generated release passed the checks. Zero failures with validation disabled is not independent evidence of data quality. The normal runs recorded schema version 3.1 for weather and air and 3.0 for taxis and zones.
 
-## Supporting fixture correctness checks
+The normal configuration spent a median of 23.93 seconds in the recorded validation stages, summed across datasets within each run. Disabling additional validation reduced median update time by 10.76 seconds, but increased median total time by 75.30 seconds. The latter is not a negative cost of validation: integration varied substantially between runs, and the no-extra-validation totals ranged from 600.31 to 944.69 seconds. Three repetitions are insufficient to isolate the feature's overall cost from this variation. Schema checks, casting, key checks and duplicate selection remain enabled in that configuration.
 
-A separate 200-trip fixture provides targeted checks that are easier to inspect than the full dataset. Its release contains 15 new taxi trips, 3 duplicates, 4 weather rows, 4 air rows and one zone correction. The acceptance run inserted the expected rows, preserved old rows with nulls in added fields, and replayed without inserts or updates. All four products were skipped on replay.
+Monitoring identified taxis as the slowest dataset to process: its median dataset duration was 82.04 seconds, compared with 8.90 seconds for zones, 11.32 for weather and 12.24 for air. These dataset durations cover their update work, not the later integration stage. Across the recorded samples, execution status was successful and reported validation-failure frequency was zero. Counts and timings therefore make it possible to distinguish the large taxi update from the more expensive shared integration work.
 
-The fixture also verified invalid-zone rejection, unsupported-schema rejection, an explicit fare correction, pending-refresh recovery and all six legacy query answers. Selective refresh matched full recomputation for all four products. These are fixture-level correctness results, not additional full-data performance measurements. Evidence is retained in evidence/acceptance.json.
+Disabling monitoring reduced median total time by 80.23 seconds, about 11.9% of the normal median. This is an observed comparison rather than a precise audit-writing cost: integration also ran faster in that configuration. Monitoring introduces Delta writes and metadata work, but the experiment does not isolate these from execution variability.
 
-Nine separate fixture ablations (three per case) had median total times of 81.60 seconds for normal processing, 70.74 seconds without extra validation and 67.92 seconds without monitoring. The fixture used local[2], two shuffle partitions and a 2 GiB driver with Spark 4.0.1, Delta 4.0.1, Python 3.12 and Java 21 on Windows. These small-workload timings are supporting evidence only; raw samples and their summary remain in evidence/measurements.json and evidence/summary.json.
+Physical storage increased by a median of 1,371.13 MiB in normal processing, 1,371.14 MiB without extra validation and 1,371.07 MiB without monitoring. This includes new data, retained old Delta files, transaction logs, staged changes and operational records. No cleanup was performed. The normal and no-monitoring median increases differ by only about 65.2 KiB; this difference should not be treated as an exact measurement of monitoring storage. Most measured growth is associated with data processing and retained versions.
+
+## Correctness checks and their limits
+
+Every evaluation sample passed the comparison of all four analytical products against the first normal-processing result. Disabling validation or monitoring therefore did not change the measured product contents for this valid release. This comparison does not independently prove that the full-data incremental results equal a complete rebuild, because the reference was produced by the same incremental implementation.
+
+Separate tests using the 200-trip fixture checked duplicates, nullable schema additions, invalid zone references, unsupported schemas, explicit taxi corrections and recovery after an interrupted refresh. They also checked selective refresh against full recomputation and the six existing query results. These tests support correctness; their timings are not used as the main performance evidence in this report. The full-data evaluation did not inject failures or invalid records, so zero rejections alone cannot demonstrate that invalid inputs would be handled correctly.
+
+The saved fixture results are in [evidence/acceptance.json](evidence/acceptance.json). The release counts and source-file checks are retained in [evidence/full_release_manifest.json](evidence/full_release_manifest.json) and [evidence/full_release_verification.json](evidence/full_release_verification.json).
 
 ## Maintainability and scalability
 
-The solution reuses Week 1 normalization and validation and Week 2 analytical SQL. Changed rows are staged before MERGE so target-table updates cannot invalidate the comparison used to identify changes. Audit tables retain dataset counts, timings and failures. The implementation assumes one writer; readers should wait for pipeline completion because publication across several tables is not atomic.
+The implementation reuses Week 1 preparation and validation and Week 2 analytical SQL. Generation, updates, refresh and monitoring are kept in separate modules, making it easier to change one part without rewriting the others. Simple value rules can be extended through configuration. New datasets still require their keys, transformations, reference checks and refresh dependencies to be defined explicitly.
 
-The measured priority for improvement is integration. Partition-aware merge predicates and reuse of affected-trip IDs are candidates for reducing repeated reads, but require correctness checks and representative benchmarks. Retention policies and file compaction would control accumulated history and small files. Stable source trip IDs would simplify corrections. Extending the registry with a dataset requires its schema, validation, keys and refresh dependencies.
+The main maintenance complications are taxi correction identity, tracking both old and new analytical groups, and recovering when a run stops between table commits. Staging changed rows before merging preserves the change set used by refresh. A pending marker triggers recomputation after failure. This is manageable for a local batch application, but it assumes one writer and does not make publication across all tables atomic.
 
-The available evidence supports a working local batch solution at the supplied data volume. It does not establish distributed scalability or the overhead of validation and monitoring during a first full-data update. Those claims would require repeated runs from the same pre-update baseline, with saved runtime settings and before/after storage measurements.
+The measurements show that the solution handles the supplied workload, but processing time is not proportional only to the number of new rows. Integration remains expensive because affected-row selection and merges can access much larger tables. Partition-aware merge matching and reuse of affected IDs are the first improvements to investigate. Full recomputation of the two context summaries is another possible optimisation, although integration is the larger measured cost.
+
+Repeated runs also retain substantial storage. A longer-running deployment would need retention rules and file compaction, while stable source IDs and ordered releases would simplify corrections. Distributed scalability has not been measured. Before adding more infrastructure, the next evaluation should save the exact runtime settings, use more repetitions under controlled machine load, and measure integration's scan and shuffle costs.

@@ -1,0 +1,974 @@
+[
+  {
+    "run_id": "7e6b1308222b4fa3966000eb3d3e8f04",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "7e6b1308222b4fa3966000eb3d3e8f04",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 2.0660115000791848,
+        "duration_seconds": 22.416285899933428,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "7e6b1308222b4fa3966000eb3d3e8f04",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.8184556000633165,
+        "duration_seconds": 12.859153400058858,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "7e6b1308222b4fa3966000eb3d3e8f04",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.6662992999190465,
+        "duration_seconds": 12.841666999971494,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "7e6b1308222b4fa3966000eb3d3e8f04",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 21.19224290002603,
+        "duration_seconds": 101.05369960004464,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 159.37564199999906,
+    "affected_trips": 739033,
+    "integration_seconds": 434.2814194998937,
+    "analytical_refresh_seconds": 80.02193709998392,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 9.255190999945626
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 8.852440000046045
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 22.85048939997796
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 23.943747300072573
+      }
+    },
+    "total_seconds": 673.685052899993,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 0,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693127732,
+    "storage_overhead_bytes": 1437714653,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "29de5b0f16c3484993eae4f3aacc3dc5",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "29de5b0f16c3484993eae4f3aacc3dc5",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.8075034000212327,
+        "duration_seconds": 20.056283500045538,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "29de5b0f16c3484993eae4f3aacc3dc5",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 2.6654784999554977,
+        "duration_seconds": 26.25052870006766,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "29de5b0f16c3484993eae4f3aacc3dc5",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 3.2783183000283316,
+        "duration_seconds": 29.540042100008577,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "29de5b0f16c3484993eae4f3aacc3dc5",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 47.68533879995812,
+        "duration_seconds": 150.64627450006083,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 245.93084450007882,
+    "affected_trips": 739033,
+    "integration_seconds": 658.5381375999423,
+    "analytical_refresh_seconds": 40.22060890006833,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 7.362074599950574
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 7.741457000025548
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 9.233205799944699
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 7.571491100010462
+      }
+    },
+    "total_seconds": 944.6897426000796,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 0,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693152631,
+    "storage_overhead_bytes": 1437739552,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "6bdf74dc7fba440e88c6eb9be26fc781",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "6bdf74dc7fba440e88c6eb9be26fc781",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.4926438999827951,
+        "duration_seconds": 6.859631099971011,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "6bdf74dc7fba440e88c6eb9be26fc781",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.8920367999235168,
+        "duration_seconds": 9.436147399945185,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "6bdf74dc7fba440e88c6eb9be26fc781",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.133642299915664,
+        "duration_seconds": 11.054180299979635,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "6bdf74dc7fba440e88c6eb9be26fc781",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 20.19355229998473,
+        "duration_seconds": 91.27975220000371,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 120.29840949992649,
+    "affected_trips": 739033,
+    "integration_seconds": 426.97408429998904,
+    "analytical_refresh_seconds": 46.17270019999705,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 11.041214999975637
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 9.899054800043814
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 13.207797499955632
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 10.49560029990971
+      }
+    },
+    "total_seconds": 593.4550386000192,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 0,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693085429,
+    "storage_overhead_bytes": 1437672350,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "ba68c15332324761924e0dd89b5e589d",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "ba68c15332324761924e0dd89b5e589d",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.7015851000323892,
+        "duration_seconds": 9.133996100048535,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "ba68c15332324761924e0dd89b5e589d",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.0469381998991594,
+        "duration_seconds": 11.156627700082026,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "ba68c15332324761924e0dd89b5e589d",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.94291240000166,
+        "duration_seconds": 12.43317929992918,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "ba68c15332324761924e0dd89b5e589d",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 16.06577310001012,
+        "duration_seconds": 70.25716449995525,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 112.5160700000124,
+    "affected_trips": 739033,
+    "integration_seconds": 431.77007989992853,
+    "analytical_refresh_seconds": 56.01941990002524,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 10.137801900040358
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 10.761667800019495
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 12.992542400024831
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 11.383960200008005
+      }
+    },
+    "total_seconds": 600.3073297999799,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 1,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693710002,
+    "storage_overhead_bytes": 1438296923,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "62b5e1b4514c4a5fb5170583bce434c2",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "62b5e1b4514c4a5fb5170583bce434c2",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6271553999977186,
+        "duration_seconds": 9.978431599913165,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "62b5e1b4514c4a5fb5170583bce434c2",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9834755000192672,
+        "duration_seconds": 14.494664400001056,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "62b5e1b4514c4a5fb5170583bce434c2",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.384165700059384,
+        "duration_seconds": 12.931209599948488,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "62b5e1b4514c4a5fb5170583bce434c2",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 21.064795499900356,
+        "duration_seconds": 88.73097879998386,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 127.93352449999657,
+    "affected_trips": 739033,
+    "integration_seconds": 427.12996459996793,
+    "analytical_refresh_seconds": 45.21611129993107,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 11.106777699897066
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 9.872598399990238
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 12.843656499986537
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 10.153444100054912
+      }
+    },
+    "total_seconds": 600.2805720999604,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 1,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693442434,
+    "storage_overhead_bytes": 1438029355,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "263d2fa4f86841048273673b282572f4",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "263d2fa4f86841048273673b282572f4",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6175265000201762,
+        "duration_seconds": 8.903369800071232,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "263d2fa4f86841048273673b282572f4",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2123661000514403,
+        "duration_seconds": 11.32221470004879,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "263d2fa4f86841048273673b282572f4",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.9888397000031546,
+        "duration_seconds": 12.236709099961445,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "263d2fa4f86841048273673b282572f4",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 21.112332400050946,
+        "duration_seconds": 82.0403154999949,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 123.2741238999879,
+    "affected_trips": 739033,
+    "integration_seconds": 518.2827931999927,
+    "analytical_refresh_seconds": 82.42466659995262,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 21.980265000020154
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 10.984562400029972
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 9.701067000045441
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 19.604539699968882
+      }
+    },
+    "total_seconds": 723.9820000999607,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 1,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693152208,
+    "storage_overhead_bytes": 1437739129,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "65bcb6418f18423ea0a3bb8c514e2d65",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "65bcb6418f18423ea0a3bb8c514e2d65",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6232619000365958,
+        "duration_seconds": 7.631217800080776,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "65bcb6418f18423ea0a3bb8c514e2d65",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.0592597000068054,
+        "duration_seconds": 10.792793600005098,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "65bcb6418f18423ea0a3bb8c514e2d65",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2685840000631288,
+        "duration_seconds": 11.93394839996472,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "65bcb6418f18423ea0a3bb8c514e2d65",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 19.875178699963726,
+        "duration_seconds": 75.78955119999591,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 107.53850839997176,
+    "affected_trips": 739033,
+    "integration_seconds": 423.2787747998955,
+    "analytical_refresh_seconds": 36.45178679993842,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 8.609584100078791
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 8.520581800024956
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 9.44120609993115
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 8.234907800098881
+      }
+    },
+    "total_seconds": 567.2697740999283,
+    "recovery_refresh": false,
+    "case": "without_monitoring",
+    "repetition": 2,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693057046,
+    "storage_overhead_bytes": 1437643967,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "32a31cc7d00343508aec752d0f59e87b",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "32a31cc7d00343508aec752d0f59e87b",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.6013232000404969,
+        "duration_seconds": 8.61484300007578,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "32a31cc7d00343508aec752d0f59e87b",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.266811800072901,
+        "duration_seconds": 11.08702470001299,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "32a31cc7d00343508aec752d0f59e87b",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.3499748999020085,
+        "duration_seconds": 12.047947000013664,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "32a31cc7d00343508aec752d0f59e87b",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 19.21242410002742,
+        "duration_seconds": 66.26237550005317,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 106.98346420004964,
+    "affected_trips": 739033,
+    "integration_seconds": 491.876181300031,
+    "analytical_refresh_seconds": 47.35468220000621,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 10.328803400043398
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 7.881894399994053
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 10.118896199972369
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 8.218427299987525
+      }
+    },
+    "total_seconds": 646.2153994999826,
+    "recovery_refresh": false,
+    "case": "full",
+    "repetition": 2,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693208206,
+    "storage_overhead_bytes": 1437795127,
+    "equivalent_products": true
+  },
+  {
+    "run_id": "5a65bc7ba03c4c938adadf2908b8cbf1",
+    "status": "success",
+    "datasets": {
+      "taxi_zones": {
+        "run_id": "5a65bc7ba03c4c938adadf2908b8cbf1",
+        "dataset": "taxi_zones",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 1,
+        "inserted_records": 0,
+        "updated_records": 1,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 0.5852898000739515,
+        "duration_seconds": 8.023438100004569,
+        "error": "",
+        "source": "data\\week3_release\\taxi_zones.csv"
+      },
+      "weather": {
+        "run_id": "5a65bc7ba03c4c938adadf2908b8cbf1",
+        "dataset": "weather",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 48,
+        "inserted_records": 48,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.0473355000140145,
+        "duration_seconds": 11.052948400028981,
+        "error": "",
+        "source": "data\\week3_release\\weather.csv"
+      },
+      "air_quality": {
+        "run_id": "5a65bc7ba03c4c938adadf2908b8cbf1",
+        "dataset": "air_quality",
+        "status": "success",
+        "schema_version": "3.1",
+        "processed_records": 288,
+        "inserted_records": 288,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 0,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 1.2975863999454305,
+        "duration_seconds": 11.863402200047858,
+        "error": "",
+        "source": "data\\week3_release\\air_quality.csv"
+      },
+      "taxi_trips": {
+        "run_id": "5a65bc7ba03c4c938adadf2908b8cbf1",
+        "dataset": "taxi_trips",
+        "status": "success",
+        "schema_version": "3.0",
+        "processed_records": 859931,
+        "inserted_records": 716609,
+        "updated_records": 0,
+        "rejected_records": 0,
+        "duplicate_records": 143322,
+        "out_of_scope_records": 0,
+        "validation_failures": 0,
+        "validation_seconds": 14.759376600035466,
+        "duration_seconds": 63.172894199960865,
+        "error": "",
+        "source": "data\\week3_release\\taxi_trips.parquet"
+      }
+    },
+    "incremental_update_seconds": 103.07030699995812,
+    "affected_trips": 739033,
+    "integration_seconds": 575.3075523000443,
+    "analytical_refresh_seconds": 70.60589880007319,
+    "products": {
+      "daily_mobility_summary": {
+        "status": "refreshed",
+        "scope": "pickup_date IN (DATE '2024-01-01',DATE '2024-01-02',DATE '2024-01-03',DATE '2024-01-04',DATE '2024-01-05',DATE '2024-01-06',DATE '2024-01-07',DATE '2024-01-08',DATE '2024-01-09',DATE '2024-01-10',DATE '2024-01-11',DATE '2024-01-12',DATE '2024-01-13',DATE '2024-01-14',DATE '2024-01-15',DATE '2024-01-16',DATE '2024-01-17',DATE '2024-01-18',DATE '2024-01-19',DATE '2024-01-20',DATE '2024-01-21',DATE '2024-01-22',DATE '2024-01-23',DATE '2024-01-24',DATE '2024-01-25',DATE '2024-01-26',DATE '2024-01-27',DATE '2024-01-28',DATE '2024-01-29',DATE '2024-01-30',DATE '2024-01-31',DATE '2024-02-01',DATE '2024-02-02',DATE '2024-02-03',DATE '2024-02-04',DATE '2024-02-05',DATE '2024-02-06',DATE '2024-02-07',DATE '2024-02-08',DATE '2024-02-09',DATE '2024-02-10',DATE '2024-02-11',DATE '2024-02-12',DATE '2024-02-13',DATE '2024-02-14',DATE '2024-02-15',DATE '2024-02-16',DATE '2024-02-17',DATE '2024-02-18',DATE '2024-02-19',DATE '2024-02-20',DATE '2024-02-21',DATE '2024-02-22',DATE '2024-02-23',DATE '2024-02-24',DATE '2024-02-25',DATE '2024-02-26',DATE '2024-02-27',DATE '2024-02-28',DATE '2024-02-29',DATE '2024-03-01',DATE '2024-03-02',DATE '2024-03-03',DATE '2024-03-04',DATE '2024-03-05',DATE '2024-03-06',DATE '2024-03-07',DATE '2024-03-08',DATE '2024-03-09',DATE '2024-03-10',DATE '2024-03-11',DATE '2024-03-12',DATE '2024-03-13',DATE '2024-03-14',DATE '2024-03-15',DATE '2024-03-16',DATE '2024-03-17',DATE '2024-03-18',DATE '2024-03-19',DATE '2024-03-20',DATE '2024-03-21',DATE '2024-03-22',DATE '2024-03-23',DATE '2024-03-24',DATE '2024-03-25',DATE '2024-03-26',DATE '2024-03-27',DATE '2024-03-28',DATE '2024-03-29',DATE '2024-03-30',DATE '2024-03-31',DATE '2024-04-01',DATE '2024-04-02',DATE '2024-04-03',DATE '2024-04-04',DATE '2024-04-05',DATE '2024-04-06',DATE '2024-04-07',DATE '2024-04-08',DATE '2024-04-09',DATE '2024-04-10',DATE '2024-04-11',DATE '2024-04-12',DATE '2024-04-13',DATE '2024-04-14',DATE '2024-04-15',DATE '2024-04-16',DATE '2024-04-17',DATE '2024-04-18',DATE '2024-04-19',DATE '2024-04-20',DATE '2024-04-21',DATE '2024-04-22',DATE '2024-04-23',DATE '2024-04-24',DATE '2024-04-25',DATE '2024-04-26',DATE '2024-04-27',DATE '2024-04-28',DATE '2024-04-29',DATE '2024-04-30',DATE '2024-05-01',DATE '2024-05-02',DATE '2024-05-03',DATE '2024-05-04',DATE '2024-05-05',DATE '2024-05-06',DATE '2024-05-07',DATE '2024-05-08',DATE '2024-05-09',DATE '2024-05-10',DATE '2024-05-11',DATE '2024-05-12',DATE '2024-05-13',DATE '2024-05-14',DATE '2024-05-15',DATE '2024-05-16',DATE '2024-05-17',DATE '2024-05-18',DATE '2024-05-19',DATE '2024-05-20',DATE '2024-05-21',DATE '2024-05-22',DATE '2024-05-23',DATE '2024-05-24',DATE '2024-05-25',DATE '2024-05-26',DATE '2024-05-27',DATE '2024-05-28',DATE '2024-05-29',DATE '2024-05-30',DATE '2024-05-31',DATE '2024-06-01',DATE '2024-06-02',DATE '2024-06-03',DATE '2024-06-04',DATE '2024-06-05',DATE '2024-06-06',DATE '2024-06-07',DATE '2024-06-08',DATE '2024-06-09',DATE '2024-06-10',DATE '2024-06-11',DATE '2024-06-12',DATE '2024-06-13',DATE '2024-06-14',DATE '2024-06-15',DATE '2024-06-16',DATE '2024-06-17',DATE '2024-06-18',DATE '2024-06-19',DATE '2024-06-20',DATE '2024-06-21',DATE '2024-06-22',DATE '2024-06-23',DATE '2024-06-24',DATE '2024-06-25',DATE '2024-06-26',DATE '2024-06-27',DATE '2024-06-28',DATE '2024-06-29',DATE '2024-06-30',DATE '2024-07-01')",
+        "seconds": 21.38915389997419
+      },
+      "taxi_zone_statistics": {
+        "status": "refreshed",
+        "scope": "month IN (DATE '2024-01-01',DATE '2024-02-01',DATE '2024-03-01',DATE '2024-04-01',DATE '2024-05-01',DATE '2024-06-01',DATE '2024-07-01')",
+        "seconds": 15.212821100023575
+      },
+      "weather_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 8.784079700009897
+      },
+      "air_quality_impact_summary": {
+        "status": "refreshed",
+        "scope": "full",
+        "seconds": 7.968265700037591
+      }
+    },
+    "total_seconds": 748.986368300044,
+    "recovery_refresh": false,
+    "case": "without_validation",
+    "repetition": 2,
+    "physical_bytes_before": 2255413079,
+    "physical_bytes_after": 3693152824,
+    "storage_overhead_bytes": 1437739745,
+    "equivalent_products": true
+  }
+]

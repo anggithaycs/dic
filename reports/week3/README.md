@@ -16,8 +16,8 @@ The implementation is in [src/week3](../../src/week3/). The [README there](../..
 
 ## Reports and tests
 
-- [Design report](design_report.pdf): how the update, validation, refresh and monitoring steps work. The editable version is [design_report.md](design_report.md).
-- [Evaluation report](evaluation_report.pdf): results from the full-data update and replay runs, with the smaller tests used to check correctness. The editable version is [evaluation_report.md](evaluation_report.md).
+- [Design report](design_report.md): how the update, validation, refresh and monitoring steps work.
+- [Evaluation report](evaluation_report.md): results from nine full-data update experiments, with the smaller tests used to check correctness.
 - [test_week3.py](../../tests/test_week3.py): the 200-trip test dataset and checks for duplicates, schema changes, invalid rows, corrections, recovery and query results.
 - [plan.md](plan.md): the implementation plan.
 
@@ -25,13 +25,10 @@ The implementation is in [src/week3](../../src/week3/). The [README there](../..
 
 The generated update files are in `data/week3_release/`. They contain 716,609 new taxi trips, 143,322 duplicate trips, 48 weather rows, 288 air-quality rows and one zone correction. Weather adds humidity and air quality adds AQI. The data files are excluded from Git and can be recreated with the generator.
 
-The full update took 674.90 seconds, about 11 minutes 15 seconds. Its run log is in `storage/delta/week3/`. The nine evaluation runs are in `storage/metrics/week3/`; these replayed the same files after the update, so they measured duplicate processing rather than inserting the data again.
+The latest evaluation is in `storage/metrics/week3/b4ea2164845846b4b4fc9825c2e218cc/`. All nine runs started from copies of the pre-update baseline and inserted the new records. Normal processing took a median of 673.69 seconds, about 11 minutes 14 seconds. The report compares it with processing without extra validation and without monitoring, with three repetitions per configuration.
 
 Copies of the results used in the report are in [evidence/](evidence/):
 
-- [full_update.json](evidence/full_update.json): counts and timings from the full-data update.
-- [full_replay_measurements.json](evidence/full_replay_measurements.json): the nine full-data replay runs.
+- [full_evaluation_measurements.json](evidence/full_evaluation_measurements.json) and [full_evaluation_summary.json](evidence/full_evaluation_summary.json): the latest nine full-data update experiments used in the report.
 - [acceptance.json](evidence/acceptance.json): results from the 200-trip correctness tests.
-- [measurements.json](evidence/measurements.json) and [summary.json](evidence/summary.json): timings from the small test dataset, not the full data.
 - [full_release_manifest.json](evidence/full_release_manifest.json) and [full_release_verification.json](evidence/full_release_verification.json): generated file counts and validation results.
-- [monitoring_results.json](evidence/monitoring_results.json): monitoring query results from the small test run.

@@ -1,74 +1,84 @@
-# Operating the urban data platform
-## Scope and architecture
+# Week 3 design report
 
-Week 3 extends the existing Spark and Delta platform with incremental releases, schema evolution, selective analytical refresh, monitoring and validation. The design uses a sequential batch command and ordinary Python modules. This is sufficient to demonstrate the operating principles on one machine without adding a scheduler, service layer or message broker.
+## 1. Purpose and processing flow
 
-The processing path is release files, schema checks, reusable preparation and validation, a changed-row comparison, Silver MERGE, affected-trip enrichment and Gold refresh. Invalid records take a separate path to quarantine. Execution and refresh metadata are appended to Delta tables. The original raw sources remain unchanged and continue to define the source contract.
+Week 3 extends the platform from loading snapshots to processing updates. The aim is to add new records, recognise duplicates and apply corrections while keeping the existing data and Week 2 queries usable. The solution uses the same Spark and Delta Lake stack as the earlier weeks and runs as a local batch pipeline.
 
-The implementation reuses Week 1 naming, timestamp conversion, business keys, dataset transformations and SQL predicates. Week 2 queries and product SQL remain unchanged. Shared code performs loading, casting, duplicate selection, merging, audit writes and orchestration. Domain code remains responsible for taxi identities, sensor keys, borough mapping and context joins.
+Each release passes through five steps: check the source schema, prepare and validate the rows, compare them with the existing Silver tables, merge the changes, and refresh the affected analytical data. Invalid rows are stored separately in quarantine. The pipeline also records counts, timings and errors so that each execution can be inspected afterwards.
 
-## Simulated releases
+The code is divided by responsibility. `generate.py` creates releases, `updates.py` validates and merges them, `refresh.py` maintains the integrated and Gold tables, and `run.py` coordinates the process. Week 1 preparation and validation functions and Week 2 analytical SQL are reused. This keeps the Week 3 changes focused on operating the existing platform rather than introducing a second implementation.
 
-Taxi generation copies valid source records, shifts pickup and dropoff times by the same interval, and retains distances, locations, fares and source column types. It generates 7.5% new records and includes 1.5% original duplicate records, rounded upward. The earliest new pickup is one hour after the raw source's maximum pickup. Preserving elapsed source intervals keeps durations realistic, although a pathological source maximum can produce an unrealistic release date.
+### Generating the updates
 
-Weather generation starts at the next valid source hour and produces 48 observations by default. It retains valid meteorological values, varies temperature smoothly and adds numeric humidity between 55 and 79 percent. Air generation retains each NYC sensor's latest valid attributes, produces consecutive hours after the dataset's last valid observation, and varies PM2.5 and synthetic AQI within permitted ranges. AQI is demonstration data rather than a scientific conversion from PM2.5.
+The taxi release contains new trips equal to 7.5% of the original raw row count and copied trips equal to 1.5%, rounded upward. New trips are based on valid source records. Pickup and drop-off times are shifted together, preserving trip duration, and the earliest new pickup is one hour after the original maximum. The original Parquet column types are retained. The copied rows exercise duplicate detection against data already loaded into Silver.
 
-A fourth release corrects one taxi-zone label. This addresses the instruction to provide an update for every dataset as well as exercising correction semantics. Each output is a single physical CSV or Parquet file. The manifest records new, duplicate and modified counts and added fields. Different source end dates are preserved; missing overlap remains visible as missing contextual information.
+Weather and air-quality releases contain 48 following hours by default. Air updates include each observed NYC sensor. Weather introduces a nullable `humidity` column, validated between 20 and 100, while air quality introduces nullable `aqi`, validated between 0 and 500. The generated AQI values are synthetic test data, not a conversion from PM2.5. A zone release changes one zone label to exercise updates to reference data.
 
-<!-- pagebreak -->
-
-## Incremental processing and identity
-
-The update path reads each release without replacing existing tables. It validates the source schema, applies the existing preparation functions, isolates invalid rows and selects one deterministic valid survivor per key. A null-safe comparison against Silver separates new rows, modified rows and unchanged duplicates. Only new and changed rows are merged. Records absent from a release are preserved; absence never means deletion.
-
-Weather and air use their existing observation identities, and zones use location ID. These stable keys permit corrections with MERGE. Taxi IDs originally hash timestamps, locations, fare and distance. That hash alone cannot identify a corrected fare. An explicit original_trip_id field resolves this ambiguity: it must reference an existing taxi record and becomes the correction's target ID. Producers must supply it for taxi corrections. No approximate matching is attempted.
-
-When multiple valid versions of a key occur within one release, the Week 1 lexicographic payload rule selects one. This is deterministic, but does not determine the newest real-world event. Releases must arrive in order and should contain one authoritative version per key. A later enhancement would introduce producer sequence numbers, source event IDs and a stale-update check.
-
-## Controlled schema evolution
-
-The additional fields are explicitly configured in config/week3.yaml. Approved nullable numeric columns are cast and validated before MERGE schema evolution. Existing rows receive null, and a later older-format release preserves already stored values for fields it omits. Original source columns must still exist. Unexpected columns, removed columns and Parquet type changes cause the entire readable batch to be quarantined while other datasets continue.
-
-CSV has no reliable physical type declaration, so safe casts and value predicates enforce types at record level. Invalid timestamps, numeric values and required fields are rejected. Structural changes that affect meaning, units, keys or existing analytical columns require manual review and a migration. Automatic acceptance of arbitrary additions would hide producer mistakes.
-
-The weather source already contains rhum. New humidity is kept separately so schema evolution does not silently replace the established relative_humidity_pct meaning used by integration. AQI is likewise stored for future use without rewriting the Week 2 PM2.5 analysis. This preserves compatibility while making new attributes available.
+Each dataset is written to one CSV or Parquet file, with a manifest recording the expected counts and schema additions. Each release follows its own source's time coverage. Therefore, new taxi trips do not necessarily have matching weather or air observations; missing context remains null, as in Week 1. Source timestamp outliers can also shift the generated taxi release unusually far forward, so the generated dates should not be interpreted as a realistic forecast.
 
 <!-- pagebreak -->
 
-## Analytical consistency and refresh
+## 2. Incremental processing and validation
 
-Changed taxi IDs identify directly affected trips. Changed zone IDs identify trips with either endpoint in those zones. Changed weather or air hours identify trips with a pickup or dropoff in those hours. The pipeline enriches these trips using all current contextual sources and merges them into the existing integrated table. It verifies that enrichment preserves unique trip identities.
+Incoming rows are compared with the current Silver table using the dataset's key. A key that does not exist is inserted. An existing key with changed values is updated. An existing key with identical values is counted as a duplicate and does not need another write. Comparisons handle null values explicitly. Rows that are absent from a release remain unchanged; a missing row is not treated as a deletion.
 
-The refresh records both old and new pickup dates, which is necessary when a taxi correction moves a trip between days or months. Daily mobility replaces complete affected date groups. Taxi-zone statistics replaces complete affected month groups. Recomputing complete groups avoids incorrect addition of averages and correctly removes obsolete aggregate rows when labels or dates change.
+Weather and air observations use their existing keys, and zones use `location_id`. Taxi corrections need special handling because the original trip ID includes fare and distance. Changing either would otherwise produce a new ID. A correction must therefore provide `original_trip_id`, pointing to an existing Silver trip. The update is applied to that identity after validation. This avoids guessing whether similar trips represent the same journey.
 
-Weather impact contains exposure counts shared across zones, so changing the observed period or weather can affect many groups. The simple implementation fully rebuilds this product when a relevant dataset changes. Air impact contains a continuous hourly calendar, including hours without trips; it is also rebuilt when trips or citywide context change. Both could be maintained more incrementally with explicit calendar and sufficient-statistic state, but that extra complexity is not justified for the small summaries.
+Repeated keys within a release are resolved using the existing deterministic ordering of row values. This makes repeated executions consistent, but does not prove which conflicting row is newest. Releases should arrive in order and contain one authoritative version per key. Explicit release sequence numbers would be needed to support reliable out-of-order corrections.
 
-A dependency map skips irrelevant products. Weather and air updates do not rebuild fare and distance summaries, and an identical replay skips all product writes. Context updates that match no taxi trips do not rebuild existing products. The daily and monthly SQL is filtered to the relevant groups; a full-table scan may still occur depending on physical pruning. Selective refresh reduces rewritten output and aggregation scope, not necessarily every input read.
+Only changed rows are staged and passed to Delta `MERGE`. Staging happens before the target is modified because a comparison that reads the target could otherwise be recomputed against its updated contents. The staged rows also provide the input for identifying which analytical records need refreshing.
 
-## Failures and recovery
+### Validation framework
 
-Delta commits are atomic per table. Readers can continue reading a valid snapshot during each write, but the release is not a transaction across Silver, integration and four Gold products. The orchestration writes a durable local pending marker before mutations. A failure leaves it present. On the next successful invocation the pipeline repairs integration and all Gold products from current Silver, then clears the marker.
+Validation combines shared structural checks with dataset-specific rules. Shared checks cover required columns, safe type conversion, missing keys and duplicate keys. Existing Week 1 rules check taxi durations and fares, weather values and air-observation completeness. Taxi pickup and drop-off locations must also exist in the zone table. Missing environmental context is allowed, but an invalid mandatory zone reference is rejected.
 
-Normal operation therefore uses selective refresh, while recovery deliberately prioritizes correctness through recomputation. The supported deployment has one writer and local paths. There is no distributed lock, exactly-once audit guarantee or automatic rollback of an entire release. Consumers requiring a consistent multi-table view should wait for pipeline success. A larger deployment should publish a release manifest containing committed table versions.
+Invalid rows are excluded from the merge and saved with their contents, rejection reason, run ID and timestamp. The contents are stored as JSON so that malformed rows with different schemas can share the same quarantine table. Valid rows continue through processing. A readable batch with an unsupported schema is quarantined as a whole while the other datasets can continue; an unreadable file is recorded as an execution failure.
+
+### Schema evolution
+
+Allowed additions and their validation rules are defined in `config/week3.yaml`. The new humidity and AQI columns are nullable, so existing rows receive null without needing fabricated historical values. If a later release omits an allowed added column, previously stored values are preserved. Original source columns remain required. Unexpected columns, removed columns and changes to existing Parquet types are rejected. CSV values are checked through casting and value rules because CSV does not carry reliable physical types.
+
+The existing weather `rhum` field continues to supply the humidity measure used by Week 2. The new `humidity` field is stored separately, and AQI does not replace the existing PM2.5 analysis. This allows schema evolution without silently changing established query meanings. New value checks can be added as SQL predicates in configuration; new transformations, reference checks or datasets still require the corresponding code and registry changes.
 
 <!-- pagebreak -->
 
-## Validation and monitoring
+## 3. Keeping analytical results consistent
 
-Generic validation covers source structure, safe casts, missing keys, configured SQL predicates and duplicate keys. Dataset-specific rules cover taxi durations and monetary values, meteorological ranges, sensor completeness and borough mapping. Taxi pickup and dropoff locations are checked against current zone references. Missing weather or air observations remain permitted context gaps, consistent with Week 1; they are not treated as missing mandatory foreign keys.
+After Silver is updated, the pipeline identifies trips whose integrated values may have changed. A taxi update directly identifies a trip. A zone change affects trips that use that zone at either endpoint. Weather and air updates affect trips with pickup or drop-off times in the changed observation hours. These trips are joined with the current context tables, checked for preserved trip identities, and merged into the integrated table.
 
-Invalid rows are excluded before Silver MERGE and therefore do not enter analytical products. Quarantine stores a JSON envelope, a reason, execution ID and timestamp. The envelope accepts heterogeneous malformed schemas without corrupting the quarantine table's schema. Unsupported readable batches are isolated wholesale; an unreadable file is an execution failure recorded in the operational audit.
+The refresh then uses the existing Week 2 product definitions. Both the old and new pickup dates are collected, so moving a trip between dates also removes its contribution from the old group. The four products use the following strategies:
 
-New ordinary value rules are SQL predicates in configuration. This allows extensions without modifying the core validator. Transformations and complex reference relationships still require dataset-specific code. Adding entirely new datasets also requires extending the Week 1 registry and configuration validator, which currently enumerate four datasets, plus defining analytical dependencies.
+- **Daily mobility summary:** replace complete affected date groups.
+- **Taxi-zone statistics:** replace complete affected month groups.
+- **Weather impact summary:** recompute the product when relevant data changes, because shared exposure counts can affect several groups.
+- **Air-quality impact summary:** recompute the product when relevant data changes, including its continuous hourly calendar.
 
-Execution metadata includes elapsed time, processed, inserted, updated, rejected and duplicate records, scope exclusions, schema version, validation failures and error messages. Monitoring SQL reports failure frequency and rate, processing duration by dataset, rejections per run and duration trends. Failure rates distinguish repeated problems from datasets merely run more often. Counts help reconcile input handling; duration trends and errors help locate regressions.
+Replacing complete groups is simpler and safer than trying to add or subtract averages. It also handles changes to zone labels and trips moving between groups. The two context summaries use full recomputation because maintaining their shared counts and calendar incrementally would require additional state and more complex correction logic.
 
-Additional production metrics would include source freshness, expected-versus-received volume, schema fingerprints, input checksums, shuffle/spill metrics, executor failures, storage utilization and alert thresholds. Operational history and impact tables require a retention policy. Automatic destructive cleanup is deliberately absent from this course implementation.
+A dependency map prevents unrelated refreshes. For example, a weather update does not require rebuilding fare and distance summaries. Replaying an unchanged release skips all product writes. Context changes with no matching trips also skip existing products under the current trip-based dependency policy. If future products expose environmental observations independently of trips, that policy will need to be extended.
 
-## Evaluation and maintainability
+Selective refresh reduces the records enriched and the groups rewritten, but it does not guarantee that Spark reads only those records. Finding affected IDs, executing joins and matching a merge can still scan large tables. This is an important distinction between the logical update strategy and its physical execution cost.
 
-The evaluation uses separate copies of the same baseline for normal processing, processing without additional row validation, and processing without operational monitoring. It records update time, integration time, Gold refresh time and physical storage increase. Case order rotates across repetitions; raw samples are retained. Product equality checks guard against an ablation changing semantics. The no-validation case retains casting, schema checks, key checks and duplicate selection, so its result measures the additional rules and reference-checking cost rather than eliminating all validation.
+### Failure recovery and publication
 
-Week 1's reusable prepare and classify steps made maintenance easier. Replacing snapshot publication and introducing correction identity and analytical refresh required the largest changes. The design favors explicit rules and small modules; it avoids a generic dependency engine. For a redesign, stable source trip IDs and versioned releases would be the first changes. At larger scale, partition-aware merges, compacted files, bounded impact retention and managed orchestration would become useful. Performance conclusions belong to the accompanying measured evaluation, not assumptions about production-scale speed.
+Delta provides atomic commits for individual tables, but the whole release spans several Silver, integrated and Gold tables. Readers could therefore observe different stages of a release if they query while processing is still underway. The supported approach is one writer at a time, with analytical consumers waiting for successful pipeline completion.
 
-Reference: Delta Lake documentation, Table deletes updates and merges, https://docs.delta.io/delta-update/.
+Before making changes, the runner creates `refresh_pending.json`. A failed execution leaves this marker in place. The next successful run rebuilds integration and Gold from the current Silver state before clearing it. Recovery deliberately uses full recomputation to restore analytical consistency even if the previous run stopped halfway through publication. It does not roll back the entire release or provide a transaction across tables. A larger deployment could publish a list of committed table versions for readers to use as one consistent release.
+
+<!-- pagebreak -->
+
+## 4. Monitoring architecture
+
+Operational metadata is stored in Delta alongside the data pipeline. The `executions` table records each dataset's status, schema version, processed, inserted, updated, rejected and duplicate counts, validation failures, validation time, total processing time and error message. `pipeline_runs` records overall status and phase timings. `product_refreshes` records which analytical products were refreshed and the integrated table version used. Quarantine and staged changes retain the row-level information needed to investigate a run.
+
+The five queries in `monitoring.sql` answer the main operational questions: which datasets have validation failures most often, which take longest, how rows were handled in each execution, whether processing time changed from the preceding run, and which executions reported errors. Validation reports can also group quarantine rows by run and rejection reason to show what failed and why.
+
+Counts need to be interpreted consistently. Unchanged rows already in Silver are duplicates but are not validation failures. Losing rows from duplicate selection within one file contribute to both duplicate and rejected counts, so those two totals should not simply be added. EPA records outside the configured scope have a separate count. Keeping these distinctions makes the monitoring results useful for explaining input handling rather than just reporting a single rejected total.
+
+## 5. Engineering decisions and trade-offs
+
+The design favours a small set of Python modules and explicit configuration. Reusing the earlier preparation functions and analytical SQL reduces duplicated logic and helps preserve compatibility. The main additions are correction handling, staged changes, refresh dependencies and operational records.
+
+Duplicate checks still compare releases with existing data, corrections require stable identities, and some analytical summaries are fully recomputed. Delta history, staged changes and monitoring writes increase storage and transaction overhead. 
+
+The main performance improvement to investigate is reducing integration reads and merge work through partition-aware matching and reuse of affected-trip IDs. Stable producer trip IDs and ordered release numbers would simplify corrections. Supporting more datasets requires their source definitions, keys, validation and analytical dependencies. Distributed scheduling and publication controls should be added only when the workload requires them, with correctness checks and measurements at representative volumes.
