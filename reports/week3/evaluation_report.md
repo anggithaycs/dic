@@ -1,4 +1,12 @@
-# Week 3 evaluation
+<div align="center">
+
+# Week 3 Evaluation Report by Group 4
+
+### Group 4: Gabor, Anggitha, Lalitha
+
+---
+
+</div>
 
 ## Workload and method
 
