@@ -23,6 +23,7 @@ os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
 from src.common.config import load_config
 from src.common.spark_session import get_spark_session, stop_spark_session
 from src.integration.pipeline import UrbanDataIntegrationPipeline
+from src.monitoring.pipeline_monitor import PipelineMonitor
 
 EVIDENCE_PATH = ROOT / "storage/metrics/week3/task2_integration_refresh.json"
 BASELINE_EVIDENCE_PATH = ROOT / "storage/metrics/week3/task2_baseline.json"
@@ -145,7 +146,9 @@ def source_increment_summary(
     return source_window_summary(inserted, timestamp_column)
 
 
-def run(spark: SparkSession, config: dict[str, Any]) -> dict[str, Any]:
+def _run_incremental_integration(
+    spark: SparkSession, config: dict[str, Any]
+) -> dict[str, Any]:
     started = time.perf_counter()
     baseline_evidence = json.loads(BASELINE_EVIDENCE_PATH.read_text(encoding="utf-8"))
     integrated_config = baseline_evidence["integrated_dataset"]
@@ -409,6 +412,41 @@ def run(spark: SparkSession, config: dict[str, Any]) -> dict[str, Any]:
     new_taxi.unpersist()
     integrated_baseline.unpersist()
     return evidence
+
+
+def run(spark: SparkSession, config: dict[str, Any]) -> dict[str, Any]:
+    """Run the unchanged integration refresh with operational monitoring."""
+    monitoring = PipelineMonitor(
+        spark,
+        "week3_task2_incremental_integration",
+        "integration",
+        "integrated_taxi_trips",
+    ).start_execution(
+        input_path=config["datasets"]["taxi_trips"]["silver_path"],
+        target_path=config["integration"]["output_path"],
+    )
+    try:
+        evidence = _run_incremental_integration(spark, config)
+        execution = evidence["execution"]
+        scope = evidence["incremental_scope"]
+        schema = evidence["schema_evolution"]
+        monitoring.finalize_success(
+            execution,
+            processed_records=scope["new_taxi_candidates"],
+            updated_records=0,
+            duplicate_records=scope["duplicate_trip_ids_ignored"],
+            rejected_records=scope["rejected_or_unsupported_rows"],
+            schema_version_before=schema["integrated_schema_version_before"],
+            schema_version_after=schema["integrated_schema_version_after"],
+            schema_changes=json.dumps(schema["delta_schema_changes"]),
+            execution_seconds=execution["execution_seconds"],
+            delta_version_before=execution["delta_version_before"],
+            delta_version_after=execution["delta_version_after"],
+        )
+        return evidence
+    except Exception as error:
+        monitoring.finalize_failure(error)
+        raise
 
 
 def main() -> None:

@@ -1,0 +1,188 @@
+{
+  "generated_at_utc": "2026-09-29T11:01:04.094650+00:00",
+  "benchmark_environment": {
+    "spark_version": "4.0.1",
+    "master": "local[2]",
+    "validation_rows": 120000,
+    "monitoring_operation_rows": 300000,
+    "local_benchmark": true,
+    "temporary_paths_cleaned": true
+  },
+  "methodology_summary": "Task 1 and Task 2 timings are copied from existing evidence. New benchmarks use only synthetic cached DataFrames and temporary Delta paths.",
+  "incremental_update_times": {
+    "Taxi Trips": 51.573,
+    "Weather": 14.298,
+    "Air Quality": 32.651
+  },
+  "analytical_refresh_times": {
+    "integrated_taxi_trips": 344.928,
+    "daily_mobility_summary": 4.225,
+    "taxi_zone_statistics": 3.391,
+    "weather_impact_summary": 10.249,
+    "air_quality_impact_summary": 3.202
+  },
+  "analytical_full_refresh_comparison": {
+    "daily_mobility_summary": {
+      "full_refresh_seconds": 3.092007,
+      "refresh_savings": -0.366427,
+      "speedup": 0.731836,
+      "equivalent": true
+    },
+    "taxi_zone_statistics": {
+      "full_refresh_seconds": 2.064224,
+      "refresh_savings": -0.642748,
+      "speedup": 0.608736,
+      "equivalent": true
+    },
+    "weather_impact_summary": {
+      "full_refresh_seconds": 4.35066,
+      "refresh_savings": -1.355734,
+      "speedup": 0.424496,
+      "equivalent": true
+    },
+    "air_quality_impact_summary": {
+      "full_refresh_seconds": 3.114062,
+      "refresh_savings": -0.028239,
+      "speedup": 0.972536,
+      "equivalent": true
+    }
+  },
+  "validation_overhead": {
+    "methodology": "Prepared synthetic input was cached and materialized once. Baseline counts the same prepared columns without classification; validation uses the reusable classify_records and split_records path. Quarantine writes are excluded.",
+    "input_row_count": 120000,
+    "accepted_row_count": 102481,
+    "rejected_row_count": 17519,
+    "warmup_count": 1,
+    "measured_repetitions": 5,
+    "baseline": {
+      "samples_seconds": [
+        0.038238,
+        0.03977,
+        0.038603,
+        0.029164,
+        0.040009
+      ],
+      "mean_seconds": 0.037157,
+      "median_seconds": 0.038603
+    },
+    "validation": {
+      "samples_seconds": [
+        0.535402,
+        0.425103,
+        0.354079,
+        0.341574,
+        0.506013
+      ],
+      "mean_seconds": 0.432434,
+      "median_seconds": 0.425103
+    },
+    "mean_absolute_overhead_seconds": 0.395278,
+    "median_absolute_overhead_seconds": 0.386501,
+    "mean_percentage_overhead": 1063.815525,
+    "median_percentage_overhead": 1001.228764,
+    "primary_metric": "median_absolute_overhead_seconds"
+  },
+  "monitoring_overhead": {
+    "methodology": "A cached synthetic aggregation is measured alone and with real PipelineMonitor start/finalize plus one append to a pre-created temporary Delta table.",
+    "synthetic_operation_input_row_count": 300000,
+    "warmup_count": 1,
+    "measured_repetitions": 10,
+    "baseline": {
+      "samples_seconds": [
+        0.048893,
+        0.036726,
+        0.039537,
+        0.040316,
+        0.035896,
+        0.034242,
+        0.034868,
+        0.037523,
+        0.038701,
+        0.03867
+      ],
+      "mean_seconds": 0.038537,
+      "median_seconds": 0.038097
+    },
+    "monitored": {
+      "samples_seconds": [
+        0.926132,
+        0.84968,
+        0.852286,
+        0.783241,
+        0.811789,
+        0.80317,
+        0.775856,
+        0.750091,
+        0.797169,
+        1.581799
+      ],
+      "mean_seconds": 0.893121,
+      "median_seconds": 0.80748
+    },
+    "mean_absolute_overhead_seconds": 0.854584,
+    "median_absolute_overhead_seconds": 0.769383,
+    "mean_percentage_overhead": 2217.554838,
+    "median_percentage_overhead": 2019.548645,
+    "primary_metric": "median_absolute_overhead_seconds",
+    "measured_monitoring_rows_written": 10,
+    "temporary_monitoring_rows_including_warmup": 11
+  },
+  "storage_snapshot": {
+    "measurement": "allocated local filesystem bytes (st_blocks * 512)",
+    "raw_path_sizes_bytes": {
+      "bronze": 215912448,
+      "silver": 2420633600,
+      "gold": 831488,
+      "pipeline_runs": 348160,
+      "incremental_runs": 237568,
+      "ingestion_runs": 131072,
+      "quarantine": 18788352,
+      "week3_metrics": 110592
+    },
+    "core_data_bytes": 2637377536,
+    "week3_operational_metadata_bytes": 585728,
+    "operational_storage_overhead_percent": 0.022209,
+    "evidence_artifact_bytes": 110592,
+    "quarantine_bytes": 18788352,
+    "notes": "Week 3 operational metadata includes pipeline_runs and incremental_runs only. Quarantine and ingestion_runs predate Week 3 and are reported separately."
+  },
+  "production_integrity": {
+    "production_delta_versions_before": {
+      "storage/delta/bronze/raw_taxi_trips": 0,
+      "storage/delta/bronze/raw_air_quality": 0,
+      "storage/delta/bronze/raw_taxi_zones": 0,
+      "storage/delta/bronze/raw_weather": 0,
+      "storage/delta/silver/clean_air_quality": 2,
+      "storage/delta/silver/clean_taxi_zones": 0,
+      "storage/delta/silver/clean_weather": 2,
+      "storage/delta/silver/clean_taxi_trips": 1,
+      "storage/delta/silver/integrated_taxi_trips": 1,
+      "storage/delta/gold/daily_mobility_summary": 2,
+      "storage/delta/gold/taxi_zone_statistics": 2,
+      "storage/delta/gold/weather_impact_summary": 1,
+      "storage/delta/gold/_metadata": 0,
+      "storage/delta/gold/air_quality_impact_summary": 2
+    },
+    "production_delta_versions_after": {
+      "storage/delta/bronze/raw_taxi_trips": 0,
+      "storage/delta/bronze/raw_air_quality": 0,
+      "storage/delta/bronze/raw_taxi_zones": 0,
+      "storage/delta/bronze/raw_weather": 0,
+      "storage/delta/silver/clean_air_quality": 2,
+      "storage/delta/silver/clean_taxi_zones": 0,
+      "storage/delta/silver/clean_weather": 2,
+      "storage/delta/silver/clean_taxi_trips": 1,
+      "storage/delta/silver/integrated_taxi_trips": 1,
+      "storage/delta/gold/daily_mobility_summary": 2,
+      "storage/delta/gold/taxi_zone_statistics": 2,
+      "storage/delta/gold/weather_impact_summary": 1,
+      "storage/delta/gold/_metadata": 0,
+      "storage/delta/gold/air_quality_impact_summary": 2
+    },
+    "production_delta_versions_unchanged": true,
+    "production_monitoring_row_count_before": 8,
+    "production_monitoring_row_count_after": 8,
+    "production_monitoring_row_count_unchanged": true,
+    "task1_to_task4_evidence_hashes_unchanged": true
+  }
+}

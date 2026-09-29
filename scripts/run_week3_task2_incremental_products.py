@@ -12,6 +12,8 @@ from delta.tables import DeltaTable
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
+from src.monitoring.pipeline_monitor import PipelineMonitor
+
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE_EVIDENCE = ROOT / "storage/metrics/week3/task2_baseline.json"
 INTEGRATION_EVIDENCE = ROOT / "storage/metrics/week3/task2_integration_refresh.json"
@@ -162,7 +164,7 @@ def append_merge(
     )
 
 
-def run(spark: SparkSession) -> dict[str, Any]:
+def _run_incremental_products(spark: SparkSession) -> dict[str, Any]:
     baseline = json.loads(BASELINE_EVIDENCE.read_text(encoding="utf-8"))
     integration = json.loads(INTEGRATION_EVIDENCE.read_text(encoding="utf-8"))
     integrated = spark.read.format("delta").load(INTEGRATED_PATH).cache()
@@ -618,6 +620,56 @@ def run(spark: SparkSession) -> dict[str, Any]:
     ):
         frame.unpersist()
     return evidence
+
+
+def run(spark: SparkSession) -> dict[str, Any]:
+    """Run unchanged Gold refreshes with one operational record per product."""
+    monitoring = {
+        name: PipelineMonitor(
+            spark,
+            "week3_task2_incremental_products",
+            "gold_refresh",
+            name,
+        ).start_execution(
+            input_path=INTEGRATED_PATH,
+            target_path=str(GOLD_ROOT / name),
+        )
+        for name in PRODUCT_NAMES
+    }
+    processed_scope_fields = {
+        "daily_mobility_summary": "new_aggregate_rows",
+        "taxi_zone_statistics": "new_aggregate_rows",
+        "weather_impact_summary": "updated_zone_weather_groups",
+        "air_quality_impact_summary": "incremental_hour_rows",
+    }
+    insert_only_products = {
+        "daily_mobility_summary",
+        "taxi_zone_statistics",
+        "air_quality_impact_summary",
+    }
+    try:
+        evidence = _run_incremental_products(spark)
+        for name in PRODUCT_NAMES:
+            product = evidence["products"][name]
+            processed_records = product["affected_scope"][
+                processed_scope_fields[name]
+            ]
+            finalization_fields: dict[str, Any] = {
+                "processed_records": processed_records,
+                "execution_seconds": product["incremental_refresh_time_seconds"],
+                "delta_version_before": product["baseline_delta_version"],
+                "delta_version_after": product["updated_delta_version"],
+                "schema_changes": json.dumps(product["schema_evolution_fields_used"]),
+            }
+            if name in insert_only_products:
+                finalization_fields["inserted_records"] = processed_records
+                finalization_fields["updated_records"] = 0
+            monitoring[name].finalize_success(**finalization_fields)
+        return evidence
+    except Exception as error:
+        for execution in monitoring.values():
+            execution.finalize_failure(error)
+        raise
 
 
 def main() -> None:

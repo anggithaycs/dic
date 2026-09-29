@@ -11,4 +11,6 @@ tmp/
 data/
 /scripts/explore/
 /scripts/build*
-/scripts/render*
+/scripts/render*.DS_Store
+
+.DS_Store

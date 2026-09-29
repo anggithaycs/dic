@@ -68,6 +68,49 @@ datasets:
       tolls_amount: 0.0
     key:
     - trip_id
+    required_values:
+    - pickup_location_id
+    - dropoff_location_id
+    reference_checks:
+    - source_field: pickup_location_id
+      reference_path: storage/delta/silver/clean_taxi_zones
+      reference_field: location_id
+      rule_name: missing_reference:pickup_location_id
+    - source_field: dropoff_location_id
+      reference_path: storage/delta/silver/clean_taxi_zones
+      reference_field: location_id
+      rule_name: missing_reference:dropoff_location_id
+    schema_compatibility:
+      expected_canonical_fields:
+      - vendor_id
+      - pickup_datetime
+      - dropoff_datetime
+      - passenger_count
+      - trip_distance
+      - rate_code_id
+      - store_and_fwd_flag
+      - pickup_location_id
+      - dropoff_location_id
+      - payment_type
+      - fare_amount
+      - extra
+      - mta_tax
+      - tip_amount
+      - tolls_amount
+      - improvement_surcharge
+      - total_amount
+      - congestion_surcharge
+      - airport_fee
+      - pickup_local_datetime
+      - dropoff_local_datetime
+      - pickup_date
+      - pickup_year
+      - pickup_month
+      - pickup_day
+      - pickup_hour
+      - trip_duration_minutes
+      - trip_id
+      supported_additive_fields: []
     quality_rules:
       min_fare_amount: 0.0
       max_fare_amount: 5000.0
@@ -143,6 +186,32 @@ datasets:
       weather_condition_code: int
     key:
     - weather_observation_id
+    required_values:
+    - year
+    - month
+    - day
+    - hour
+    - temperature_c
+    - relative_humidity_pct
+    schema_compatibility:
+      expected_canonical_fields:
+      - year
+      - month
+      - day
+      - hour
+      - temperature_c
+      - relative_humidity_pct
+      - precipitation_mm
+      - wind_direction_deg
+      - wind_speed_kmh
+      - air_pressure_hpa
+      - cloud_cover_oktas
+      - weather_condition_code
+      - observation_datetime
+      - observation_date
+      - weather_observation_id
+      supported_additive_fields:
+      - humidity
     quality_rules:
       valid_year: 2024
       temp_min_c: -40.0
@@ -239,6 +308,37 @@ datasets:
       county_name: string
     key:
     - air_quality_observation_id
+    required_values:
+    - state_code
+    - county_code
+    - site_number
+    - poc
+    - sample_measurement_pm25
+    schema_compatibility:
+      expected_canonical_fields:
+      - state_code
+      - county_code
+      - site_number
+      - parameter_code
+      - poc
+      - latitude
+      - longitude
+      - parameter_name
+      - date_local
+      - time_local
+      - date_gmt
+      - time_gmt
+      - sample_measurement_pm25
+      - units_of_measure
+      - state_name
+      - county_name
+      - observation_datetime
+      - observation_date
+      - observation_hour
+      - borough
+      - air_quality_observation_id
+      supported_additive_fields:
+      - aqi
     quality_rules:
       valid_year: 2024
       ny_state_code: 36
@@ -301,6 +401,18 @@ datasets:
       service_zone: string
     key:
     - location_id
+    required_values:
+    - location_id
+    - borough
+    - zone
+    - service_zone
+    schema_compatibility:
+      expected_canonical_fields:
+      - location_id
+      - borough
+      - zone
+      - service_zone
+      supported_additive_fields: []
     quality_rules: {}
     validation:
       valid_borough: borough IS NOT NULL AND length(trim(borough)) > 0

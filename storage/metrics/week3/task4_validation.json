@@ -1,0 +1,148 @@
+{
+  "generated_at_utc": "2026-09-29T10:21:45.590818+00:00",
+  "validation_categories": [
+    "duplicate_records",
+    "invalid_attribute_values",
+    "missing_reference_records",
+    "unsupported_schema_changes",
+    "incomplete_records"
+  ],
+  "duplicate_test": {
+    "input_record_count": 2,
+    "accepted_record_count": 1,
+    "rejected_record_count": 1,
+    "rejections": [
+      {
+        "id": "duplicate",
+        "_validation_errors": [],
+        "_rejection_reason": "duplicate_key"
+      }
+    ],
+    "processing_continued": true,
+    "rejected_rows_isolated": true,
+    "invalid_rows_excluded_from_accepted_output": true
+  },
+  "invalid_attribute_test": {
+    "input_record_count": 1,
+    "accepted_record_count": 0,
+    "rejected_record_count": 1,
+    "rejections": [
+      {
+        "id": "invalid-attribute",
+        "_validation_errors": [
+          "valid_amount"
+        ],
+        "_rejection_reason": "valid_amount"
+      }
+    ],
+    "processing_continued": true,
+    "rejected_rows_isolated": true,
+    "invalid_rows_excluded_from_accepted_output": true
+  },
+  "missing_reference_test": {
+    "input_record_count": 1,
+    "accepted_record_count": 0,
+    "rejected_record_count": 1,
+    "rejections": [
+      {
+        "id": "missing-reference",
+        "_validation_errors": [
+          "missing_reference:zone_id"
+        ],
+        "_rejection_reason": "missing_reference:zone_id"
+      }
+    ],
+    "processing_continued": true,
+    "rejected_rows_isolated": true,
+    "invalid_rows_excluded_from_accepted_output": true
+  },
+  "incomplete_record_test": {
+    "input_record_count": 1,
+    "accepted_record_count": 0,
+    "rejected_record_count": 1,
+    "rejections": [
+      {
+        "id": "incomplete",
+        "_validation_errors": [
+          "missing_value:required_text"
+        ],
+        "_rejection_reason": "missing_value:required_text"
+      }
+    ],
+    "processing_continued": true,
+    "rejected_rows_isolated": true,
+    "invalid_rows_excluded_from_accepted_output": true
+  },
+  "supported_schema_change_test": {
+    "schema_compatibility": {
+      "missing_required_fields": [],
+      "unexpected_fields": [],
+      "supported_additive_fields_seen": [
+        "humidity"
+      ],
+      "is_compatible": true
+    },
+    "processing_continued": true
+  },
+  "unsupported_schema_change_test": {
+    "input_record_count": 1,
+    "accepted_record_count": null,
+    "rejected_record_count": null,
+    "schema_compatibility": {
+      "missing_required_fields": [],
+      "unexpected_fields": [
+        "unexpected_field"
+      ],
+      "supported_additive_fields_seen": [],
+      "is_compatible": false
+    },
+    "processing_continued": false,
+    "rejected_rows_isolated": false,
+    "invalid_rows_excluded_from_accepted_output": true,
+    "publication_prevented": true,
+    "temporary_published_rows_before": 1,
+    "temporary_published_rows_after": 1
+  },
+  "quarantine_behavior": {
+    "temporary_quarantined_row_count": 4,
+    "metadata_fields_present": [
+      "_run_id",
+      "_schema_version",
+      "_rejected_at"
+    ]
+  },
+  "analytical_exclusion_check": {
+    "all_row_level_cases_excluded_invalid_rows": true
+  },
+  "extensibility_summary": {
+    "required_values": "Configured fields add missing_value:<field> errors.",
+    "reference_checks": "Configured Delta lookups add the supplied missing_reference rule name.",
+    "schema_compatibility": "Configured canonical and additive fields produce a structured batch result."
+  },
+  "production_integrity": {
+    "production_delta_versions_before": {
+      "storage/delta/silver/clean_taxi_trips": 1,
+      "storage/delta/silver/clean_weather": 2,
+      "storage/delta/silver/clean_air_quality": 2,
+      "storage/delta/silver/clean_taxi_zones": 0,
+      "storage/delta/silver/integrated_taxi_trips": 1,
+      "storage/delta/gold/daily_mobility_summary": 2,
+      "storage/delta/gold/taxi_zone_statistics": 2,
+      "storage/delta/gold/weather_impact_summary": 1,
+      "storage/delta/gold/air_quality_impact_summary": 2
+    },
+    "production_delta_versions_after": {
+      "storage/delta/silver/clean_taxi_trips": 1,
+      "storage/delta/silver/clean_weather": 2,
+      "storage/delta/silver/clean_air_quality": 2,
+      "storage/delta/silver/clean_taxi_zones": 0,
+      "storage/delta/silver/integrated_taxi_trips": 1,
+      "storage/delta/gold/daily_mobility_summary": 2,
+      "storage/delta/gold/taxi_zone_statistics": 2,
+      "storage/delta/gold/weather_impact_summary": 1,
+      "storage/delta/gold/air_quality_impact_summary": 2
+    },
+    "production_delta_versions_unchanged": true,
+    "existing_evidence_hashes_unchanged": true
+  }
+}

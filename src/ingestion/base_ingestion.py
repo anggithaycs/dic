@@ -19,6 +19,12 @@ from pyspark.sql import DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
 
 from src.common.logger import get_logger
+from src.ingestion.validation_rules import (
+    SchemaCompatibilityResult,
+    apply_reference_checks,
+    required_value_error_columns,
+    validate_schema_compatibility,
+)
 
 
 class BaseDatasetIngestor(ABC):
@@ -54,6 +60,7 @@ class BaseDatasetIngestor(ABC):
 
         self.logger = get_logger(f"Ingestor[{dataset_name}]")
         self.ingestion_metrics: dict[str, Any] = {}
+        self.last_schema_validation_result: SchemaCompatibilityResult | None = None
 
     def load_raw_data(self) -> DataFrame:
         """Loads data from source according to specified format."""
@@ -153,12 +160,18 @@ class BaseDatasetIngestor(ABC):
     def normalize_and_transform(self, df: DataFrame) -> DataFrame:
         """Performs dataset-specific timestamp normalization and transformations."""
 
-    def classify_records(self, df: DataFrame) -> DataFrame:
+    def classify_records(
+        self, df: DataFrame, *, include_reference_checks: bool = True
+    ) -> DataFrame:
         """Classify once; valid duplicate survivors use lexicographic payload order.
 
         This is a deterministic snapshot policy, not correction resolution.
         Invalid rows cannot displace valid rows sharing the same key.
         """
+        reference_checks = self.dataset_spec.get("reference_checks", [])
+        if include_reference_checks and reference_checks:
+            df = apply_reference_checks(self.spark, df, reference_checks)
+
         parameters = {**self.quality_rules, "source_timezone": self.source_timezone}
         validation_rules = self.dataset_spec["validation"]
         errors = [
@@ -173,10 +186,15 @@ class BaseDatasetIngestor(ABC):
             raise ValueError("At least one key column is required")
 
         errors += [F.when(F.col(k).isNull(), F.lit(f"missing_key:{k}")) for k in keys]
+        errors += required_value_error_columns(
+            df, self.dataset_spec.get("required_values", [])
+        )
         failures = F.filter(F.array(*errors), lambda x: x.isNotNull())
 
         if "_cast_errors" in df.columns:
             failures = F.concat(F.col("_cast_errors"), failures)
+        if "_reference_errors" in df.columns:
+            failures = F.concat(F.col("_reference_errors"), failures)
 
         df = df.withColumn("_validation_errors", failures)
         order = F.to_json(F.struct(*[F.col(c) for c in sorted(df.columns)]))
@@ -194,7 +212,23 @@ class BaseDatasetIngestor(ABC):
             F.when(
                 F.size("_validation_errors") > 0, F.concat_ws(";", "_validation_errors")
             ).when(F.col("_duplicate_rank") > 1, F.lit("duplicate_key")),
-        ).drop("_duplicate_rank")
+        ).drop("_duplicate_rank", "_reference_errors")
+
+    def validate_schema_compatibility(self, df: DataFrame) -> SchemaCompatibilityResult:
+        """Validate a prepared batch schema before any Bronze, quarantine, or Silver write."""
+        contract = self.dataset_spec.get("schema_compatibility")
+        if not contract:
+            result = SchemaCompatibilityResult([], [], [], True)
+        else:
+            result = validate_schema_compatibility(
+                (column for column in df.columns if column != "_cast_errors"), contract
+            )
+        self.last_schema_validation_result = result
+        if not result.is_compatible:
+            raise ValueError(
+                f"{self.dataset_name}: incompatible batch schema: {result.as_dict()}"
+            )
+        return result
 
     def split_records(self, classified: DataFrame) -> tuple[DataFrame, DataFrame]:
         """Project the clean schema after rules and keys have used transformed columns."""
@@ -207,9 +241,13 @@ class BaseDatasetIngestor(ABC):
 
         return valid, classified.filter(F.col("_rejection_reason").isNotNull())
 
-    def apply_data_quality_rules(self, df: DataFrame) -> tuple[DataFrame, DataFrame]:
+    def apply_data_quality_rules(
+        self, df: DataFrame, *, include_reference_checks: bool = True
+    ) -> tuple[DataFrame, DataFrame]:
         """Apply configured validity predicates and snapshot deduplication."""
-        return self.split_records(self.classify_records(df))
+        return self.split_records(
+            self.classify_records(df, include_reference_checks=include_reference_checks)
+        )
 
     def prepare(self, raw: DataFrame) -> DataFrame:
         """Reusable source preparation, shared by ingestion and benchmarks."""
@@ -219,7 +257,12 @@ class BaseDatasetIngestor(ABC):
 
     def preflight(self) -> DataFrame:
         """Resolve source, rule, and output schemas before any table is written."""
-        valid, _ = self.apply_data_quality_rules(self.prepare(self.load_raw_data()))
+        prepared = self.prepare(self.load_raw_data())
+        self.validate_schema_compatibility(prepared)
+        # Reference tables may be created later in the same full-run sequence.
+        valid, _ = self.apply_data_quality_rules(
+            prepared, include_reference_checks=False
+        )
         _ = valid.select(*self.partition_cols).schema
         return valid
 
@@ -237,6 +280,20 @@ class BaseDatasetIngestor(ABC):
 
         writer.save(self.delta_output_path)
 
+    def persist_rejected_records(
+        self, rejected_df: DataFrame, run_id: str | None = None
+    ) -> None:
+        """Append rejected rows with the standard quarantine diagnostics and metadata."""
+        (
+            rejected_df.withColumn("_run_id", F.lit(run_id or self.run_id))
+            .withColumn("_schema_version", F.lit(self.schema_version))
+            .withColumn("_rejected_at", F.current_timestamp())
+            .write.format("delta")
+            .mode("append")
+            .option("mergeSchema", "true")
+            .save(self.quarantine_path)
+        )
+
     def run(self, run_id: str | None = None) -> dict[str, Any]:
         """Executes full medallion ingestion lifecycle."""
         start_time = time.perf_counter()
@@ -247,7 +304,9 @@ class BaseDatasetIngestor(ABC):
         classified = None
         try:
             initial_count = raw_df.count()
-            classified = self.classify_records(self.prepare(raw_df)).persist(
+            prepared = self.prepare(raw_df)
+            self.validate_schema_compatibility(prepared)
+            classified = self.classify_records(prepared).persist(
                 StorageLevel.DISK_ONLY
             )
             valid_df, rejected_df = self.split_records(classified)
@@ -270,15 +329,7 @@ class BaseDatasetIngestor(ABC):
             self.save_to_bronze(raw_df)
 
             # Separate per-dataset tables allow heterogeneous rejected schemas.
-            (
-                rejected_df.withColumn("_run_id", F.lit(self.run_id))
-                .withColumn("_schema_version", F.lit(self.schema_version))
-                .withColumn("_rejected_at", F.current_timestamp())
-                .write.format("delta")
-                .mode("append")
-                .option("mergeSchema", "true")
-                .save(self.quarantine_path)
-            )
+            self.persist_rejected_records(rejected_df)
 
             # 6. Persist to Silver Layer
             self.save_to_delta(valid_df)

@@ -128,6 +128,56 @@ def _validate_dataset(name: str, spec: dict[str, Any]) -> list[str]:
                 f"{name}.validation.{rule}: invalid placeholder"
             ) from error
 
+    if "required_values" in spec:
+        _strings(spec["required_values"], f"{name}.required_values")
+
+    if "reference_checks" in spec:
+        checks = spec["reference_checks"]
+        if not isinstance(checks, list):
+            raise ValueError(f"{name}.reference_checks: expected a list")
+        for index, check in enumerate(checks):
+            if not isinstance(check, dict):
+                raise ValueError(f"{name}.reference_checks[{index}]: expected a mapping")
+            _require(
+                check,
+                ("source_field", "reference_path", "reference_field", "rule_name"),
+                f"{name}.reference_checks[{index}]",
+            )
+            if any(
+                not isinstance(check[key], str) or not check[key].strip()
+                for key in ("source_field", "reference_path", "reference_field", "rule_name")
+            ):
+                raise ValueError(
+                    f"{name}.reference_checks[{index}]: expected nonempty strings"
+                )
+
+    if "schema_compatibility" in spec:
+        compatibility = spec["schema_compatibility"]
+        if not isinstance(compatibility, dict):
+            raise ValueError(f"{name}.schema_compatibility: expected a mapping")
+        _require(
+            compatibility,
+            ("expected_canonical_fields", "supported_additive_fields"),
+            f"{name}.schema_compatibility",
+        )
+        _strings(
+            compatibility["expected_canonical_fields"],
+            f"{name}.schema_compatibility.expected_canonical_fields",
+        )
+        _strings(
+            compatibility["supported_additive_fields"],
+            f"{name}.schema_compatibility.supported_additive_fields",
+            allow_empty=True,
+        )
+        overlap = set(compatibility["expected_canonical_fields"]) & set(
+            compatibility["supported_additive_fields"]
+        )
+        if overlap:
+            raise ValueError(
+                f"{name}.schema_compatibility: fields cannot be both required and additive: "
+                f"{sorted(overlap)}"
+            )
+
     if name != "taxi_trips":
         _require(spec, ("selected_columns",), name)
         _strings(spec["selected_columns"], f"{name}.selected_columns")

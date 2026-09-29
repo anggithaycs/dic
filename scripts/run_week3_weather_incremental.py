@@ -24,6 +24,7 @@ os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
 from src.common.config import load_config
 from src.common.spark_session import get_spark_session, stop_spark_session
 from src.ingestion.weather_ingestion import WeatherIngestor
+from src.monitoring.pipeline_monitor import PipelineMonitor
 
 
 UPDATE_PATH = "data/updates/weather_update.csv"
@@ -69,98 +70,127 @@ def record_metadata(spark: SparkSession, metrics: dict) -> None:
 def run(spark: SparkSession, config: dict) -> dict:
     start = time.perf_counter()
     run_id = uuid4().hex
-    ingestor = build_update_ingestor(spark, config)
-    target = spark.read.format("delta").load(TARGET_PATH)
-    baseline_count = target.count()
-    schema_before = target.schema.simpleString()
-    if "humidity" in target.columns:
-        raise ValueError("Weather target already contains humidity; refusing to rerun")
-
-    raw = ingestor.load_raw_data().persist()
+    monitoring = PipelineMonitor(
+        spark, "week3_weather_incremental", "incremental_ingestion", "weather"
+    ).start_execution(run_id, input_path=UPDATE_PATH, target_path=TARGET_PATH)
+    monitoring_metrics: dict = {
+        "schema_version_before": config["platform"]["version"],
+    }
     try:
-        input_records = raw.count()
-        prepared = ingestor.prepare(raw)
-        target_keys = target.select("weather_observation_id").distinct()
-        duplicate_rows = prepared.join(
-            target_keys, "weather_observation_id", "left_semi"
-        ).persist()
-        new_candidates = prepared.join(
-            target_keys, "weather_observation_id", "left_anti"
-        ).persist()
+        ingestor = build_update_ingestor(spark, config)
+        target = spark.read.format("delta").load(TARGET_PATH)
+        baseline_count = target.count()
+        schema_before = target.schema.simpleString()
+        monitoring_metrics["delta_version_before"] = int(
+            DeltaTable.forPath(spark, TARGET_PATH).history(1).first()["version"]
+        )
+        if "humidity" in target.columns:
+            raise ValueError("Weather target already contains humidity; refusing to rerun")
+
+        raw = ingestor.load_raw_data().persist()
         try:
-            duplicate_records = duplicate_rows.count()
-            valid, rejected = ingestor.apply_data_quality_rules(new_candidates)
-            rejected_records = rejected.count()
-            insert_source = valid.dropDuplicates(
-                ["weather_observation_id"]
+            input_records = raw.count()
+            monitoring_metrics["input_records"] = input_records
+            prepared = ingestor.prepare(raw)
+            ingestor.validate_schema_compatibility(prepared)
+            target_keys = target.select("weather_observation_id").distinct()
+            duplicate_rows = prepared.join(
+                target_keys, "weather_observation_id", "left_semi"
+            ).persist()
+            new_candidates = prepared.join(
+                target_keys, "weather_observation_id", "left_anti"
             ).persist()
             try:
-                inserted_records = insert_source.count()
-                if set(insert_source.columns) != {
-                    *target.columns,
-                    "humidity",
-                }:
-                    raise ValueError(
-                        "Validated Weather update schema does not match target plus humidity"
-                    )
+                duplicate_records = duplicate_rows.count()
+                monitoring_metrics["duplicate_records"] = duplicate_records
+                valid, rejected = ingestor.apply_data_quality_rules(new_candidates)
+                rejected_records = rejected.count()
+                monitoring_metrics["rejected_records"] = rejected_records
+                monitoring_metrics["validation_failure_count"] = rejected_records
+                if rejected_records:
+                    ingestor.persist_rejected_records(rejected, run_id=run_id)
+                insert_source = valid.dropDuplicates(
+                    ["weather_observation_id"]
+                ).persist()
+                try:
+                    inserted_records = insert_source.count()
+                    monitoring_metrics["inserted_records"] = inserted_records
+                    if set(insert_source.columns) != {
+                        *target.columns,
+                        "humidity",
+                    }:
+                        raise ValueError(
+                            "Validated Weather update schema does not match target plus humidity"
+                        )
 
-                delta_target = DeltaTable.forPath(spark, TARGET_PATH)
-                (
-                    delta_target.alias("target")
-                    .merge(
-                        insert_source.alias("source"),
-                        "target.weather_observation_id = "
-                        "source.weather_observation_id",
+                    delta_target = DeltaTable.forPath(spark, TARGET_PATH)
+                    (
+                        delta_target.alias("target")
+                        .merge(
+                            insert_source.alias("source"),
+                            "target.weather_observation_id = "
+                            "source.weather_observation_id",
+                        )
+                        .withSchemaEvolution()
+                        .whenNotMatchedInsertAll()
+                        .execute()
                     )
-                    .withSchemaEvolution()
-                    .whenNotMatchedInsertAll()
-                    .execute()
-                )
+                finally:
+                    insert_source.unpersist()
             finally:
-                insert_source.unpersist()
+                duplicate_rows.unpersist()
+                new_candidates.unpersist()
         finally:
-            duplicate_rows.unpersist()
-            new_candidates.unpersist()
-    finally:
-        raw.unpersist()
+            raw.unpersist()
 
-    final_target = spark.read.format("delta").load(TARGET_PATH)
-    final_count = final_target.count()
-    humidity_populated = (
-        final_target.filter(
-            F.col("observation_datetime").between(
-                F.to_timestamp(F.lit(RELEASE_START)),
-                F.to_timestamp(F.lit(RELEASE_END)),
-            )
-            & F.col("humidity").isNotNull()
-        ).count()
-        == inserted_records
-    )
-    duration = round(time.perf_counter() - start, 3)
-    result = {
-        "run_id": run_id,
-        "dataset": "weather",
-        "input_path": UPDATE_PATH,
-        "target_path": TARGET_PATH,
-        "input_records": input_records,
-        "inserted_records": inserted_records,
-        "duplicate_records": duplicate_records,
-        "updated_records": 0,
-        "rejected_records": rejected_records,
-        "baseline_count": baseline_count,
-        "final_count": final_count,
-        "schema_version_before": config["platform"]["version"],
-        "schema_version_after": "2.1.0",
-        "schema_before": schema_before,
-        "schema_after": final_target.schema.simpleString(),
-        "schema_changes": "+humidity",
-        "humidity_exists": "humidity" in final_target.columns,
-        "humidity_populated_for_inserted": humidity_populated,
-        "execution_seconds": duration,
-        "status": "success",
-    }
-    record_metadata(spark, result)
-    return result
+        final_target = spark.read.format("delta").load(TARGET_PATH)
+        final_count = final_target.count()
+        humidity_populated = (
+            final_target.filter(
+                F.col("observation_datetime").between(
+                    F.to_timestamp(F.lit(RELEASE_START)),
+                    F.to_timestamp(F.lit(RELEASE_END)),
+                )
+                & F.col("humidity").isNotNull()
+            ).count()
+            == inserted_records
+        )
+        duration = round(time.perf_counter() - start, 3)
+        result = {
+            "run_id": run_id,
+            "dataset": "weather",
+            "input_path": UPDATE_PATH,
+            "target_path": TARGET_PATH,
+            "input_records": input_records,
+            "inserted_records": inserted_records,
+            "duplicate_records": duplicate_records,
+            "updated_records": 0,
+            "rejected_records": rejected_records,
+            "baseline_count": baseline_count,
+            "final_count": final_count,
+            "schema_version_before": config["platform"]["version"],
+            "schema_version_after": "2.1.0",
+            "schema_before": schema_before,
+            "schema_after": final_target.schema.simpleString(),
+            "schema_changes": "+humidity",
+            "humidity_exists": "humidity" in final_target.columns,
+            "humidity_populated_for_inserted": humidity_populated,
+            "execution_seconds": duration,
+            "status": "success",
+        }
+        record_metadata(spark, result)
+        monitoring.finalize_success(
+            result,
+            validation_failure_count=rejected_records,
+            delta_version_before=monitoring_metrics["delta_version_before"],
+            delta_version_after=int(
+                DeltaTable.forPath(spark, TARGET_PATH).history(1).first()["version"]
+            ),
+        )
+        return result
+    except Exception as error:
+        monitoring.finalize_failure(error, monitoring_metrics)
+        raise
 
 
 def main() -> None:

@@ -24,6 +24,7 @@ os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
 from src.common.config import load_config
 from src.common.spark_session import get_spark_session, stop_spark_session
 from src.ingestion.taxi_ingestion import TaxiTripsIngestor
+from src.monitoring.pipeline_monitor import PipelineMonitor
 
 
 UPDATE_PATH = "data/updates/yellow_tripdata_2024_update01.parquet"
@@ -63,73 +64,102 @@ def record_metadata(spark: SparkSession, metrics: dict) -> None:
 def run(spark: SparkSession, config: dict) -> dict:
     start = time.perf_counter()
     run_id = uuid4().hex
-    ingestor = build_update_ingestor(spark, config)
-    target = spark.read.format("delta").load(TARGET_PATH)
-    original_count = target.count()
-
-    raw = ingestor.load_raw_data().persist()
-    try:
-        input_records = raw.count()
-        prepared = ingestor.prepare(raw)
-        target_keys = target.select("trip_id").distinct()
-        duplicate_rows = prepared.join(
-            target_keys, "trip_id", "left_semi"
-        ).persist()
-        new_candidates = prepared.join(
-            target_keys, "trip_id", "left_anti"
-        ).persist()
-        try:
-            duplicate_records = duplicate_rows.count()
-            valid, rejected = ingestor.apply_data_quality_rules(new_candidates)
-            rejected_records = rejected.count()
-            insert_source = valid.dropDuplicates(["trip_id"]).persist()
-            try:
-                inserted_records = insert_source.count()
-                if set(insert_source.columns) != set(target.columns):
-                    raise ValueError(
-                        "Validated Taxi update schema does not match the Silver target"
-                    )
-
-                delta_target = DeltaTable.forPath(spark, TARGET_PATH)
-                (
-                    delta_target.alias("target")
-                    .merge(
-                        insert_source.alias("source"),
-                        "target.trip_id = source.trip_id",
-                    )
-                    .whenNotMatchedInsertAll()
-                    .execute()
-                )
-            finally:
-                insert_source.unpersist()
-        finally:
-            duplicate_rows.unpersist()
-            new_candidates.unpersist()
-    finally:
-        raw.unpersist()
-
-    final_count = spark.read.format("delta").load(TARGET_PATH).count()
-    duration = round(time.perf_counter() - start, 3)
-    result = {
-        "run_id": run_id,
-        "dataset": "taxi_trips",
-        "input_path": UPDATE_PATH,
-        "target_path": TARGET_PATH,
-        "input_records": input_records,
-        "inserted_records": inserted_records,
-        "duplicate_records": duplicate_records,
-        "updated_records": 0,
-        "rejected_records": rejected_records,
-        "original_count": original_count,
-        "final_count": final_count,
-        "execution_seconds": duration,
+    monitoring = PipelineMonitor(
+        spark, "week3_taxi_incremental", "incremental_ingestion", "taxi_trips"
+    ).start_execution(run_id, input_path=UPDATE_PATH, target_path=TARGET_PATH)
+    monitoring_metrics: dict = {
         "schema_version_before": config["platform"]["version"],
-        "schema_version_after": config["platform"]["version"],
-        "schema_changes": "None",
-        "status": "success",
     }
-    record_metadata(spark, result)
-    return result
+    try:
+        ingestor = build_update_ingestor(spark, config)
+        target = spark.read.format("delta").load(TARGET_PATH)
+        original_count = target.count()
+        monitoring_metrics["delta_version_before"] = int(
+            DeltaTable.forPath(spark, TARGET_PATH).history(1).first()["version"]
+        )
+
+        raw = ingestor.load_raw_data().persist()
+        try:
+            input_records = raw.count()
+            monitoring_metrics["input_records"] = input_records
+            prepared = ingestor.prepare(raw)
+            ingestor.validate_schema_compatibility(prepared)
+            target_keys = target.select("trip_id").distinct()
+            duplicate_rows = prepared.join(
+                target_keys, "trip_id", "left_semi"
+            ).persist()
+            new_candidates = prepared.join(
+                target_keys, "trip_id", "left_anti"
+            ).persist()
+            try:
+                duplicate_records = duplicate_rows.count()
+                monitoring_metrics["duplicate_records"] = duplicate_records
+                valid, rejected = ingestor.apply_data_quality_rules(new_candidates)
+                rejected_records = rejected.count()
+                monitoring_metrics["rejected_records"] = rejected_records
+                monitoring_metrics["validation_failure_count"] = rejected_records
+                if rejected_records:
+                    ingestor.persist_rejected_records(rejected, run_id=run_id)
+                insert_source = valid.dropDuplicates(["trip_id"]).persist()
+                try:
+                    inserted_records = insert_source.count()
+                    monitoring_metrics["inserted_records"] = inserted_records
+                    if set(insert_source.columns) != set(target.columns):
+                        raise ValueError(
+                            "Validated Taxi update schema does not match the Silver target"
+                        )
+
+                    delta_target = DeltaTable.forPath(spark, TARGET_PATH)
+                    (
+                        delta_target.alias("target")
+                        .merge(
+                            insert_source.alias("source"),
+                            "target.trip_id = source.trip_id",
+                        )
+                        .whenNotMatchedInsertAll()
+                        .execute()
+                    )
+                finally:
+                    insert_source.unpersist()
+            finally:
+                duplicate_rows.unpersist()
+                new_candidates.unpersist()
+        finally:
+            raw.unpersist()
+
+        final_count = spark.read.format("delta").load(TARGET_PATH).count()
+        duration = round(time.perf_counter() - start, 3)
+        result = {
+            "run_id": run_id,
+            "dataset": "taxi_trips",
+            "input_path": UPDATE_PATH,
+            "target_path": TARGET_PATH,
+            "input_records": input_records,
+            "inserted_records": inserted_records,
+            "duplicate_records": duplicate_records,
+            "updated_records": 0,
+            "rejected_records": rejected_records,
+            "original_count": original_count,
+            "final_count": final_count,
+            "execution_seconds": duration,
+            "schema_version_before": config["platform"]["version"],
+            "schema_version_after": config["platform"]["version"],
+            "schema_changes": "None",
+            "status": "success",
+        }
+        record_metadata(spark, result)
+        monitoring.finalize_success(
+            result,
+            validation_failure_count=rejected_records,
+            delta_version_before=monitoring_metrics["delta_version_before"],
+            delta_version_after=int(
+                DeltaTable.forPath(spark, TARGET_PATH).history(1).first()["version"]
+            ),
+        )
+        return result
+    except Exception as error:
+        monitoring.finalize_failure(error, monitoring_metrics)
+        raise
 
 
 def main() -> None:

@@ -1,0 +1,173 @@
+{
+  "generated_at_utc": "2026-09-29T09:07:51.604557+00:00",
+  "monitoring_table_path": "storage/delta/metadata/pipeline_runs",
+  "total_monitoring_rows": 8,
+  "query_1_most_validation_failures": [
+    {
+      "dataset_or_product": "air_quality",
+      "total_validation_failure_count": 362187
+    },
+    {
+      "dataset_or_product": "taxi_trips",
+      "total_validation_failure_count": 11256
+    },
+    {
+      "dataset_or_product": "weather",
+      "total_validation_failure_count": 0
+    },
+    {
+      "dataset_or_product": "air_quality_impact_summary",
+      "total_validation_failure_count": null
+    },
+    {
+      "dataset_or_product": "daily_mobility_summary",
+      "total_validation_failure_count": null
+    },
+    {
+      "dataset_or_product": "integrated_taxi_trips",
+      "total_validation_failure_count": null
+    },
+    {
+      "dataset_or_product": "taxi_zone_statistics",
+      "total_validation_failure_count": null
+    },
+    {
+      "dataset_or_product": "weather_impact_summary",
+      "total_validation_failure_count": null
+    }
+  ],
+  "query_2_longest_processing_time": [
+    {
+      "pipeline_run_id": "backfill:task2_integration_refresh:integrated_taxi_trips",
+      "pipeline_name": "week3_task2_incremental_integration",
+      "pipeline_kind": "integration",
+      "dataset_or_product": "integrated_taxi_trips",
+      "execution_seconds": 344.928,
+      "status": "success"
+    }
+  ],
+  "query_3_rejected_records_per_execution": [
+    {
+      "pipeline_run_id": "backfill:task1_incremental_updates:taxi_trips",
+      "pipeline_name": "week3_taxi_incremental",
+      "dataset_or_product": "taxi_trips",
+      "rejected_records": 11256,
+      "started_at": "2026-09-25 17:18:51.042000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:task1_incremental_updates:weather",
+      "pipeline_name": "week3_weather_incremental",
+      "dataset_or_product": "weather",
+      "rejected_records": 0,
+      "started_at": "2026-09-25 20:08:17.750000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:task1_incremental_updates:air_quality",
+      "pipeline_name": "week3_air_quality_incremental",
+      "dataset_or_product": "air_quality",
+      "rejected_records": 362187,
+      "started_at": "2026-09-25 20:20:12.897000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:task2_integration_refresh:integrated_taxi_trips",
+      "pipeline_name": "week3_task2_incremental_integration",
+      "dataset_or_product": "integrated_taxi_trips",
+      "rejected_records": 0,
+      "started_at": "2026-09-26 16:00:22.855738",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:product_comparison:daily_mobility_summary",
+      "pipeline_name": "week3_task2_incremental_products",
+      "dataset_or_product": "daily_mobility_summary",
+      "rejected_records": null,
+      "started_at": "2026-09-26 16:17:51.089000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:product_comparison:weather_impact_summary",
+      "pipeline_name": "week3_task2_incremental_products",
+      "dataset_or_product": "weather_impact_summary",
+      "rejected_records": null,
+      "started_at": "2026-09-26 16:17:51.914000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:product_comparison:taxi_zone_statistics",
+      "pipeline_name": "week3_task2_incremental_products",
+      "dataset_or_product": "taxi_zone_statistics",
+      "rejected_records": null,
+      "started_at": "2026-09-26 16:17:54.594000",
+      "status": "success"
+    },
+    {
+      "pipeline_run_id": "backfill:product_comparison:air_quality_impact_summary",
+      "pipeline_name": "week3_task2_incremental_products",
+      "dataset_or_product": "air_quality_impact_summary",
+      "rejected_records": null,
+      "started_at": "2026-09-26 16:17:57.292000",
+      "status": "success"
+    }
+  ],
+  "query_4_processing_time_trend": [
+    {
+      "started_at": "2026-09-25 17:18:51.042000",
+      "pipeline_name": "week3_taxi_incremental",
+      "pipeline_kind": "incremental_ingestion",
+      "dataset_or_product": "taxi_trips",
+      "execution_seconds": 51.573
+    },
+    {
+      "started_at": "2026-09-25 20:08:17.750000",
+      "pipeline_name": "week3_weather_incremental",
+      "pipeline_kind": "incremental_ingestion",
+      "dataset_or_product": "weather",
+      "execution_seconds": 14.298
+    },
+    {
+      "started_at": "2026-09-25 20:20:12.897000",
+      "pipeline_name": "week3_air_quality_incremental",
+      "pipeline_kind": "incremental_ingestion",
+      "dataset_or_product": "air_quality",
+      "execution_seconds": 32.651
+    },
+    {
+      "started_at": "2026-09-26 16:00:22.855738",
+      "pipeline_name": "week3_task2_incremental_integration",
+      "pipeline_kind": "integration",
+      "dataset_or_product": "integrated_taxi_trips",
+      "execution_seconds": 344.928
+    },
+    {
+      "started_at": "2026-09-26 16:17:51.089000",
+      "pipeline_name": "week3_task2_incremental_products",
+      "pipeline_kind": "gold_refresh",
+      "dataset_or_product": "daily_mobility_summary",
+      "execution_seconds": 4.225
+    },
+    {
+      "started_at": "2026-09-26 16:17:51.914000",
+      "pipeline_name": "week3_task2_incremental_products",
+      "pipeline_kind": "gold_refresh",
+      "dataset_or_product": "weather_impact_summary",
+      "execution_seconds": 10.249
+    },
+    {
+      "started_at": "2026-09-26 16:17:54.594000",
+      "pipeline_name": "week3_task2_incremental_products",
+      "pipeline_kind": "gold_refresh",
+      "dataset_or_product": "taxi_zone_statistics",
+      "execution_seconds": 3.391
+    },
+    {
+      "started_at": "2026-09-26 16:17:57.292000",
+      "pipeline_name": "week3_task2_incremental_products",
+      "pipeline_kind": "gold_refresh",
+      "dataset_or_product": "air_quality_impact_summary",
+      "execution_seconds": 3.202
+    }
+  ]
+}
