@@ -1,0 +1,149 @@
+# Week 4 baseline: reproducible, causal next-hour pickup-zone demand dataset.
+source:
+  delta_path: storage/delta/silver/integrated_taxi_trips
+  delta_version: 0
+  decision_timestamp_column: pickup_local_datetime
+  pickup_zone_column: pickup_location_id
+  pickup_borough_column: pickup_borough
+
+output:
+  delta_path: storage/delta/ml/hourly_taxi_demand
+  evidence_path: storage/metrics/week4/task1_training_dataset.json
+
+target:
+  name: next_hour_demand
+  horizon_hours: 1
+
+lags:
+  include_rolling_mean_24h: true
+  drop_rows_without_lag_24h: true
+
+# Splits apply to target_hour, not the decision hour. The Jan--Mar version-0
+# period supplies 46 train days, 23 validation days, and 22 test days.
+splits:
+  train:
+    start: "2024-01-01"
+    end: "2024-02-15"
+  validation:
+    start: "2024-02-16"
+    end: "2024-03-09"
+  test:
+    start: "2024-03-10"
+    end: "2024-03-31"
+
+environmental_features:
+  - pickup_temperature_c
+  - pickup_humidity_pct
+  - pickup_precipitation_mm
+  - pickup_weather_code
+  - pickup_wind_speed_kmh
+  - pickup_pm25
+  - pickup_weather_matched
+  - pickup_pm25_source
+
+leakage_columns:
+  - trip_id
+  - dropoff_datetime
+  - dropoff_location_id
+  - dropoff_borough
+  - dropoff_zone
+  - dropoff_service_zone
+  - trip_duration_minutes
+  - trip_distance
+  - fare_amount
+  - total_amount
+  - tip_amount
+  - tolls_amount
+  - improvement_surcharge
+  - congestion_surcharge
+  - airport_fee
+  - payment_type
+
+# Task 2: reusable, train-fitted Spark preprocessing contract.  The input is
+# the Task 1 feature-safe dataset; all learned stages fit only the train split.
+feature_pipeline:
+  input_delta_path: storage/delta/ml/hourly_taxi_demand
+  output_delta_path: storage/delta/ml/hourly_taxi_demand_features
+  evidence_path: storage/metrics/week4/task2_feature_pipeline.json
+  label_column: next_hour_demand
+  split_column: split
+  target_hour_column: target_hour
+  trace_columns:
+    - pickup_location_id
+  categorical_features:
+    - pickup_location_id
+    - pickup_borough
+    - hour
+    - day_of_week
+    - month
+    - prior_hour_pickup_weather_code
+    - prior_hour_pickup_pm25_source
+  numeric_features:
+    - demand_lag_1h
+    - demand_lag_24h
+    - rolling_mean_24h
+    - prior_hour_pickup_temperature_c
+    - prior_hour_pickup_humidity_pct
+    - prior_hour_pickup_precipitation_mm
+    - prior_hour_pickup_wind_speed_kmh
+    - prior_hour_pickup_pm25
+  binary_features:
+    - is_weekend
+    - prior_hour_pickup_weather_matched
+  # These Task 1 columns preserve whether missing environmental values were
+  # observed before train-only numeric imputation or categorical fallback.
+  missingness_indicators:
+    - prior_hour_pickup_temperature_c_is_missing
+    - prior_hour_pickup_humidity_pct_is_missing
+    - prior_hour_pickup_precipitation_mm_is_missing
+    - prior_hour_pickup_weather_code_is_missing
+    - prior_hour_pickup_wind_speed_kmh_is_missing
+    - prior_hour_pickup_pm25_is_missing
+    - prior_hour_pickup_weather_matched_is_missing
+    - prior_hour_pickup_pm25_source_is_missing
+  imputer:
+    strategy: median
+  scaling:
+    enabled: true
+    with_std: true
+    with_mean: false
+
+# Task 3: small, fixed candidate comparison. Validation chooses the final ML
+# model; test data is held back until after that decision.
+model_training:
+  model_root_path: storage/models/week4/hourly_taxi_demand
+  evidence_path: storage/metrics/week4/task3_model_evaluation.json
+  random_seed: 42
+  naive_reference:
+    prediction_column: demand_lag_24h
+  candidates:
+    linear_regression:
+      max_iter: 100
+      reg_param: 0.01
+      elastic_net_param: 0.0
+    poisson_glr:
+      family: poisson
+      link: log
+      max_iter: 100
+      reg_param: 0.01
+    decision_tree:
+      max_depth: 8
+      min_instances_per_node: 5
+    random_forest:
+      num_trees: 20
+      max_depth: 8
+      min_instances_per_node: 5
+      feature_subset_strategy: auto
+
+# Task 4: both workflows use the original Jan--Mar snapshot, with no writes to
+# Weeks 1--3 production Delta locations.
+platform_comparison:
+  platform_integrated_path: storage/delta/silver/integrated_taxi_trips
+  platform_delta_version: 0
+  raw_platform_config_path: config/platform_config.yaml
+  evidence_path: storage/metrics/week4/task4_platform_comparison.json
+  # The raw re-integration and the recorded Delta snapshot can aggregate PM2.5
+  # partitions in a different order.  PM2.5 is rounded to hundredths by the
+  # integration contract, so one hundredth plus a binary-floating-point guard
+  # is the documented comparison tolerance for context and feature vectors.
+  floating_point_tolerance: 0.010001

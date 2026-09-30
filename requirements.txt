@@ -1,3 +1,4 @@
 pyspark==4.0.1
+numpy==2.4.6
 delta-spark==4.0.1
 PyYAML==6.0.2
